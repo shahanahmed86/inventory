@@ -27,8 +27,7 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddPurchase: data => dispatch(allMethods.onAddPurchase(data)),
-        onEditPurchase: (row, index) => dispatch(allMethods.onEditPurchase(row, index)),
-        onEditRowOfPurchase: (row, index) => dispatch(allMethods.onEditRowOfPurchase(row, index)),
+        onEditPurchase: (row, index, oldQty) => dispatch(allMethods.onEditPurchase(row, index, oldQty)),
         onDeletePurchase: (row, ind) => dispatch(allMethods.onDeletePurchase(row, ind)),
     }
 }
@@ -47,6 +46,7 @@ class PurchaseBook extends Component {
             bill: '123',
             vendor: 'Gul Muhammad',
             quantity: 55,
+            oldQty: 0,
             productName: '',
             locationName: '',
             editing: false,
@@ -69,6 +69,7 @@ class PurchaseBook extends Component {
             bill: '',
             vendor: '',
             quantity: 0,
+            oldQty: 0,
             productName: '',
             locationName: '',
             editing: false,
@@ -78,6 +79,7 @@ class PurchaseBook extends Component {
 
     onSave = () => {
         const { date, bill, vendor, quantity, productName, locationName, index, editing } = this.state;
+        const { product } = this.props.reducer;
         if (!productName) {
             this.setState({
                 open: true,
@@ -91,28 +93,33 @@ class PurchaseBook extends Component {
             })
         }
         else {
+            const ind = product.findIndex(val => val.name === productName);
+            const stockInHand = parseInt(product[ind][locationName]);
             if (editing) {
-                this.props.onEditPurchase({
-                    date, bill, vendor, quantity, productName, locationName,
-                }, index)
+                if ((stockInHand - parseInt(this.state.oldQty) + parseInt(quantity)) < 0) {
+                    this.setState({
+                        open: true,
+                        message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                    });
+                }
+                else {
+                    const oldQty = parseInt(this.state.oldQty)
+                    this.props.onEditPurchase({
+                        date, bill, vendor, quantity, productName, locationName,
+                    }, index, oldQty);
+                    this.onNew();
+                }
             }
             else {
                 this.props.onAddPurchase({
                     date, bill, vendor, quantity, productName, locationName,
                 })
+                this.onNew();
             }
-            this.onNew();
         }
     }
 
     onCancelEdit = () => {
-        const { oldQty, index } = this.state;
-        const { date, bill, vendor, productName, locationName } = this.props.reducer.purchase[index];
-        this.props.onEditPurchase({
-            date, bill, vendor,
-            quantity: oldQty,
-            productName, locationName,
-        }, index);
         this.onNew();
     }
 
@@ -124,9 +131,6 @@ class PurchaseBook extends Component {
             editing: true,
             index,
         });
-        this.props.onEditRowOfPurchase({
-            quantity, productName, locationName
-        }, index)
     }
 
     onDelete = index => {

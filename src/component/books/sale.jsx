@@ -27,8 +27,7 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddSale: data => dispatch(allMethods.onAddSale(data)),
-        onEditSale: (row, index) => dispatch(allMethods.onEditSale(row, index)),
-        onEditRowOfSale: (row, index) => dispatch(allMethods.onEditRowOfSale(row, index)),
+        onEditSale: (row, index, oldQty) => dispatch(allMethods.onEditSale(row, index, oldQty)),
         onDeleteSale: (row, ind) => dispatch(allMethods.onDeleteSale(row, ind)),
     }
 }
@@ -47,6 +46,7 @@ class SaleBook extends Component {
             bill: '123',
             vendee: 'Amir  Muhammad',
             quantity: 45,
+            oldQty: 0,
             productName: '',
             locationName: '',
             editing: false,
@@ -69,6 +69,7 @@ class SaleBook extends Component {
             bill: '',
             vendee: '',
             quantity: 0,
+            oldQty: 0,
             productName: '',
             locationName: '',
             editing: false,
@@ -92,38 +93,41 @@ class SaleBook extends Component {
             })
         }
         else {
-            const ind = product.findIndex(val => val.name ===productName);
-            const stockInHand = product[ind][locationName];
-            if (stockInHand < quantity) {
-                this.setState({
-                    open: true,
-                    message: 'Sale Quantity is exceed from Stock in hand at the location',
-                })
-            }
-            else {
-                if (editing) {
+            const ind = product.findIndex(val => val.name === productName);
+            const stockInHand = parseInt(product[ind][locationName]);
+            if (editing) {
+                if ((stockInHand + parseInt(this.state.oldQty)) < quantity) {
+                    this.setState({
+                        open: true,
+                        message: 'Sale Quantity is exceed from Stock in hand at the location',
+                    });
+                }
+                else {
+                    const oldQty = parseInt(this.state.oldQty)
                     this.props.onEditSale({
                         date, bill, vendee, quantity, productName, locationName,
-                    }, index)
+                    }, index, oldQty);
+                    this.onNew();
+                }
+            }
+            else {
+                if (stockInHand < quantity) {
+                    this.setState({
+                        open: true,
+                        message: 'Sale Quantity is exceed from Stock in hand at the location',
+                    });
                 }
                 else {
                     this.props.onAddSale({
                         date, bill, vendee, quantity, productName, locationName,
                     })
+                    this.onNew();
                 }
-                this.onNew();
             }
         }
     }
 
     onCancelEdit = () => {
-        const { oldQty, index } = this.state;
-        const { date, bill, vendee, productName, locationName } = this.props.reducer.sale[index];
-        this.props.onEditSale({
-            date, bill, vendee,
-            quantity: oldQty,
-            productName, locationName,
-        }, index);
         this.onNew();
     }
 
@@ -135,9 +139,6 @@ class SaleBook extends Component {
             editing: true,
             index,
         });
-        this.props.onEditRowOfSale({
-            quantity, productName, locationName
-        }, index)
     }
 
     onDelete = index => {
@@ -215,15 +216,20 @@ class SaleBook extends Component {
     }
 
     getQty = () => {
-        const { productName, locationName } = this.state;
+        const { productName, locationName, oldQty, editing } = this.state;
         const { product } = this.props.reducer;
         if (!productName || !locationName) {
             return 'Please select product & location fields to view qty';
         }
         else {
             const ind = product.findIndex(val => val.name === productName);
-            const stockInHand = product[ind][locationName];
-            return `stock in hand is ${stockInHand}`;
+            const stockInHand = parseInt(product[ind][locationName]);
+            if (editing) {
+                return `stock in hand is ${stockInHand + parseInt(oldQty)}`;
+            }
+            else {
+                return `stock in hand is ${stockInHand}`;
+            }
         }
     }
 

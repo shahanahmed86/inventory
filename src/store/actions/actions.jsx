@@ -76,14 +76,9 @@ const allMethods = {
             dispatch({ type: types.ONADDPURCHASE, payload: data })
         }
     },
-    onEditPurchase: (row, ind) => {
+    onEditPurchase: (row, ind, oldQty) => {
         return dispatch => {
-            dispatch({ type: types.ONEDITPURCHASE, payload: { row, ind } })
-        }
-    },
-    onEditRowOfPurchase: (row, ind) => {
-        return dispatch => {
-            dispatch({ type: types.ONEDITROWOFPURCHASE, payload: { row, ind } })
+            dispatch({ type: types.ONEDITPURCHASE, payload: { row, ind, oldQty } })
         }
     },
     onDeletePurchase: (row, ind) => {
@@ -96,14 +91,9 @@ const allMethods = {
             dispatch({ type: types.ONADDSALE, payload: data })
         }
     },
-    onEditSale: (row, ind) => {
+    onEditSale: (row, ind, oldQty) => {
         return dispatch => {
-            dispatch({ type: types.ONEDITSALE, payload: { row, ind } })
-        }
-    },
-    onEditRowOfSale: (row, ind) => {
-        return dispatch => {
-            dispatch({ type: types.ONEDITROWOFSALE, payload: { row, ind } })
+            dispatch({ type: types.ONEDITSALE, payload: { row, ind, oldQty } })
         }
     },
     onDeleteSale: (row, ind) => {

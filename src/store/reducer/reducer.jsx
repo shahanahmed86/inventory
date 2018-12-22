@@ -153,14 +153,8 @@ const reducer = (state = initialState, action) => {
         case types.ONEDITPURCHASE: {
             const ind = state.product.findIndex(val => val.name === action.payload.row.productName);
             state.product[ind][action.payload.row.locationName] += parseInt(action.payload.row.quantity);
+            state.product[ind][action.payload.row.locationName] -= parseInt(action.payload.oldQty);
             state.purchase.splice(action.payload.ind, 1, action.payload.row);
-            return {
-                ...state,
-            }
-        }
-        case types.ONEDITROWOFPURCHASE: {
-            const ind = state.product.findIndex(val => val.name === action.payload.row.productName);
-            state.product[ind][action.payload.row.locationName] -= parseInt(action.payload.row.quantity);
             return {
                 ...state,
             }
@@ -183,15 +177,9 @@ const reducer = (state = initialState, action) => {
         }
         case types.ONEDITSALE: {
             const ind = state.product.findIndex(val => val.name === action.payload.row.productName);
+            state.product[ind][action.payload.row.locationName] += parseInt(action.payload.oldQty);
             state.product[ind][action.payload.row.locationName] -= parseInt(action.payload.row.quantity);
             state.sale.splice(action.payload.ind, 1, action.payload.row);
-            return {
-                ...state,
-            }
-        }
-        case types.ONEDITROWOFSALE: {
-            const ind = state.product.findIndex(val => val.name === action.payload.row.productName);
-            state.product[ind][action.payload.row.locationName] += parseInt(action.payload.row.quantity);
             return {
                 ...state,
             }
