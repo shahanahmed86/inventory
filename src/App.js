@@ -1,26 +1,31 @@
+//Basic Component
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { Provider } from 'react-redux'
+
+//store
+import store from './store/store';
+
+//Router
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+//Custom CSS
 import './App.css';
+
+//Custom Component
+import Login from './component/login';
+import Dashboard from './component/dashboard';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Provider store={store}>
+        <Router>
+          <div>
+            <Route exact path='/' component={Login} />
+            <Route exact path='/dashboard' component={Dashboard} />
+          </div>
+        </Router>
+      </Provider>
     );
   }
 }
