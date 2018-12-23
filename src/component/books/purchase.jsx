@@ -207,6 +207,29 @@ class PurchaseBook extends Component {
         });
     }
 
+    getQty = () => {
+        const { productName, locationName, oldQty, editing } = this.state;
+        const { product } = this.props.reducer;
+        if (!productName || !locationName) {
+            return 'Please select product & location fields to view qty';
+        }
+        else {
+            const ind = product.findIndex(val => val.name === productName);
+            const stockInHand = parseInt(product[ind][locationName]);
+            if (editing) {
+                return `stock in hand is ${stockInHand - parseInt(oldQty)}`;
+            }
+            else {
+                if (stockInHand) {
+                    return `stock in hand is ${stockInHand}`;
+                }
+                else {
+                    return 'This is the first time you are entering the purchase'
+                }
+            }
+        }
+    }
+
     render() {
         const { classes } = this.props;
         const { date, bill, vendor, productName, locationName, editing, quantity, open, message } = this.state;
@@ -323,6 +346,7 @@ class PurchaseBook extends Component {
                                 placeholder='Please Enter'
                                 variant='outlined'
                                 type='number'
+                                helperText={this.getQty()}
                                 name='quantity' value={quantity}
                                 onChange={this.handleChange}
                             />
