@@ -76,7 +76,7 @@ class PurchaseBook extends Component {
             index: '',
         });
     }
-
+    
     onSave = () => {
         const { date, bill, vendor, quantity, productName, locationName, index, editing } = this.state;
         const { product } = this.props.reducer;
@@ -103,7 +103,7 @@ class PurchaseBook extends Component {
                     });
                 }
                 else {
-                    const oldQty = parseInt(this.state.oldQty)
+                    const oldQty = parseInt(this.state.oldQty);
                     this.props.onEditPurchase({
                         date, bill, vendor, quantity, productName, locationName,
                     }, index, oldQty);
@@ -115,6 +115,34 @@ class PurchaseBook extends Component {
                     date, bill, vendor, quantity, productName, locationName,
                 })
                 this.onNew();
+            }
+        }
+    }
+    
+    getQty = () => {
+        const { productName, locationName, oldQty, editing } = this.state;
+        const { product } = this.props.reducer;
+        if (!productName || !locationName) {
+            return 'Please select product & location fields to view qty';
+        }
+        else {
+            const ind = product.findIndex(val => val.name === productName);
+            const stockInHand = parseInt(product[ind][locationName]);
+            if (editing) {
+                if (stockInHand) {
+                    return `stock in hand is ${stockInHand - parseInt(oldQty)}`;
+                }
+                else {
+                    return 'This is the first time you are entering the purchase'
+                }
+            }
+            else {
+                if (stockInHand) {
+                    return `stock in hand is ${stockInHand}`;
+                }
+                else {
+                    return 'This is the first time you are entering the purchase'
+                }
             }
         }
     }
@@ -216,29 +244,6 @@ class PurchaseBook extends Component {
         this.setState({
             open: false,
         });
-    }
-
-    getQty = () => {
-        const { productName, locationName, oldQty, editing } = this.state;
-        const { product } = this.props.reducer;
-        if (!productName || !locationName) {
-            return 'Please select product & location fields to view qty';
-        }
-        else {
-            const ind = product.findIndex(val => val.name === productName);
-            const stockInHand = parseInt(product[ind][locationName]);
-            if (editing) {
-                return `stock in hand is ${stockInHand - parseInt(oldQty)}`;
-            }
-            else {
-                if (stockInHand) {
-                    return `stock in hand is ${stockInHand}`;
-                }
-                else {
-                    return 'This is the first time you are entering the purchase'
-                }
-            }
-        }
     }
 
     render() {

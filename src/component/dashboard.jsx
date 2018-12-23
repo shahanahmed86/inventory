@@ -25,6 +25,7 @@ import Product from "./books/product";
 import PurchaseBook from "./books/purchase";
 import SaleBook from './books/sale';
 import Location from './books/location';
+import Inventory from './books/inventory';
 
 function mapStateToProps(store) {
     return {
@@ -131,7 +132,11 @@ class Dashboard extends Component {
             );
         }
         else if (isInventory) {
-            return ('Inventory Report');
+            return (
+                <div>
+                    <Inventory />
+                </div>
+            );
         }
         else {
             return (

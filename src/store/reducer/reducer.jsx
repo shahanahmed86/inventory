@@ -103,11 +103,7 @@ const reducer = (state = initialState, action) => {
             }
         }
         case types.ONEDITPRODUCT: {
-            const row = state.product.splice(action.payload.ind, 1);
-            row.name = action.payload.row.name;
-            row.manufacturer = action.payload.row.manufacturer;
-            row.description = action.payload.row.description;
-            state.product.splice(action.payload.ind, 1, row);
+            state.product.splice(action.payload.ind, 1, action.payload.row);
             return {
                 ...state,
             }
