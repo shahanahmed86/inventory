@@ -135,10 +135,21 @@ class PurchaseBook extends Component {
 
     onDelete = index => {
         const { quantity, productName, locationName } = this.props.reducer.purchase[index];
-        this.props.onDeletePurchase({
-            quantity, productName, locationName
-        }, index);
-        this.onNew();
+        const { product } = this.props.reducer;
+        const ind = product.findIndex(val => val.name === productName);
+        const stockInHand = parseInt(product[ind][locationName]);
+        if ((stockInHand - parseInt(quantity)) < 0) {
+            this.setState({
+                open: true,
+                message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+            });
+        }
+        else {
+            this.props.onDeletePurchase({
+                quantity, productName, locationName
+            }, index);
+            this.onNew();
+        }
     }
 
     renderDataBlock = () => {
