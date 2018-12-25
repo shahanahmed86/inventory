@@ -78,7 +78,11 @@ class SaleBook extends Component {
     }
 
     onSave = () => {
-        const { date, bill, vendee, quantity, productName, locationName, index, editing } = this.state;
+        const {
+            date, bill, vendee, quantity, productName, locationName,
+            oldQty, oldProductName, oldLocationName,
+            index, editing
+        } = this.state;
         const { product } = this.props.reducer;
         if (!productName) {
             this.setState({
