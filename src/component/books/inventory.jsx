@@ -59,75 +59,86 @@ class Inventory extends Component {
     render() {
         const { classes } = this.props;
         const { open, message, inventory } = this.state;
-        return (
-            <div className={classes.container}>
-                <div className={classes.widthParam}>
-                    <Typography
-                        color='primary'
-                        variant='h5'
-                        gutterBottom={true}
-                        align='center'
-                        children="Inventory Reports"
-                    />
-                    <div >
-                        <Paper className={classes.root}>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell
-                                            className={classes.tablePadding}
-                                            style={{ textAlign: 'center' }}
-                                        >
-                                            Product
-                                        </TableCell>
-                                        <TableCell
-                                            className={classes.tablePadding}
-                                            style={{ textAlign: 'center' }}
-                                        >
-                                            Location
-                                        </TableCell>
-                                        <TableCell
-                                            className={classes.tablePadding}
-                                            style={{ textAlign: 'center' }}
-                                        >
-                                            Closing
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {inventory.map((val, ind) => {
-                                        return (
-                                            <TableRow key={ind}>
-                                                <TableCell
-                                                    className={classes.tablePadding}
-                                                >
-                                                    {val.productName}
-                                                </TableCell>
-                                                <TableCell
-                                                    className={classes.tablePadding}
-                                                >
-                                                    {val.locationName}
-                                                </TableCell>
-                                                <TableCell
-                                                    className={classes.tablePadding}
-                                                >
-                                                    {val.quantity}
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </Paper>
+        if (inventory.length > 0) {
+            return (
+                <div className={classes.container}>
+                    <div className={classes.widthParam}>
+                        <Typography
+                            color='primary'
+                            variant='h5'
+                            gutterBottom={true}
+                            align='center'
+                            children="Inventory Reports"
+                        />
+                        <div >
+                            <Paper className={classes.root}>
+                                <Table className={classes.table}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell
+                                                className={classes.tablePadding}
+                                            >
+                                                Product
+                                            </TableCell>
+                                            <TableCell
+                                                className={classes.tablePadding}
+                                            >
+                                                Location
+                                            </TableCell>
+                                            <TableCell
+                                                className={classes.tablePadding}
+                                            >
+                                                Closing
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {inventory.map((val, ind) => {
+                                            return (
+                                                <TableRow key={ind}>
+                                                    <TableCell
+                                                        className={classes.tablePadding}
+                                                    >
+                                                        {val.productName}
+                                                    </TableCell>
+                                                    <TableCell
+                                                        className={classes.tablePadding}
+                                                    >
+                                                        {val.locationName}
+                                                    </TableCell>
+                                                    <TableCell
+                                                        className={classes.tablePadding}
+                                                    >
+                                                        {val.quantity}
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </Paper>
+                        </div>
                     </div>
+                    <PositionedSnackbar
+                        open={open}
+                        message={message}
+                        close={this.handleCloseMessage}
+                    />
                 </div>
-                <PositionedSnackbar
-                    open={open}
-                    message={message}
-                    close={this.handleCloseMessage}
-                />
-            </div>
-        );
+            );
+        }
+        else {
+            return (
+                <div className={classes.container} style={{height: '75vh'}}>
+                    <Typography
+                        color='secondary'
+                        variant='h5'
+                        align='center'
+                        children='Inventory has null quantity in items'
+                    />
+                </div>
+            )
+        }
     }
 }
 
@@ -137,20 +148,20 @@ const styles = theme => ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
     },
     widthParam: {
         width: 400,
     },
     root: {
-        width: '100%',
+        width: 'fit-content',
         marginTop: theme.spacing.unit * 2,
     },
     table: {
-        maxWidth: 400,
+        minWidth: 400,
     },
     tablePadding: {
         padding: 10,
+        textAlign: 'center',
     },
 });
 

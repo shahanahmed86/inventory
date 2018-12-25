@@ -104,46 +104,50 @@ class Location extends Component {
         if (location.length > 0) {
             const { classes } = this.props;
             return (
-                <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>SITE Name</TableCell>
-                                <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Address</TableCell>
-                                <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Options</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {location.map((val, ind) => {
-                                return (
-                                    <TableRow key={ind}>
-                                        <TableCell className={classes.tablePadding} component="th" scope="row">
-                                            {val.name}
-                                        </TableCell>
-                                        <TableCell className={classes.tablePadding}>{val.address}</TableCell>
-                                        <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>
-                                            <Button
-                                                variant='contained'
-                                                color='primary'
-                                                onClick={() => this.getRow(ind)}
-                                            >
-                                                Edit
+                <div className={classes.container}>
+                    <Paper className={classes.root}>
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>SITE Name</TableCell>
+                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Address</TableCell>
+                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Options</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {location.map((val, ind) => {
+                                    return (
+                                        <TableRow key={ind}>
+                                            <TableCell className={classes.tablePadding} component="th" scope="row">
+                                                {val.name}
+                                            </TableCell>
+                                            <TableCell className={classes.tablePadding}>{val.address}</TableCell>
+                                            <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>
+                                                <Button
+                                                    variant='contained'
+                                                    color='primary'
+                                                    size='small'
+                                                    onClick={() => this.getRow(ind)}
+                                                >
+                                                    Edit
                                             </Button>
-                                            <Button
-                                                style={{ marginLeft: 5 }}
-                                                variant='contained'
-                                                color='secondary'
-                                                onClick={() => this.onDelete(ind)}
-                                            >
-                                                Delete
+                                                <Button
+                                                    style={{ marginLeft: 5 }}
+                                                    variant='contained'
+                                                    color='secondary'
+                                                    size='small'
+                                                    onClick={() => this.onDelete(ind)}
+                                                >
+                                                    Delete
                                             </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </Paper>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </Paper>
+                </div>
             );
         }
     }
@@ -158,6 +162,7 @@ class Location extends Component {
         const { classes } = this.props;
         const { name, address, editing, open, message } = this.state;
         return (
+            <div>
             <div className={classes.container}>
                 <div className={classes.widthParam}>
                     <Paper className={classes.doPadding}>
@@ -210,6 +215,7 @@ class Location extends Component {
                         </div>
                     </Paper>
                 </div>
+                </div>
                 <div>
                     {this.renderDataBlock()}
                 </div>
@@ -227,15 +233,13 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
     },
     doPadding: {
         padding: theme.spacing.unit * 2,
     },
     widthParam: {
-        width: 400,
+        width: 350,
     },
     doGapBetween: {
         marginTop: theme.spacing.unit,
@@ -245,11 +249,11 @@ const styles = theme => ({
         alignItems: 'center',
     },
     root: {
-        width: '100%',
+        width: 'fit-content',
         marginTop: theme.spacing.unit * 2,
     },
     table: {
-        minWidth: 700,
+        width: '100%',
     },
     tablePadding: {
         padding: 10,

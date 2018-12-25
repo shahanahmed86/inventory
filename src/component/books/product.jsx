@@ -109,48 +109,52 @@ class Product extends Component {
         if (product.length > 0) {
             const { classes } = this.props;
             return (
-                <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Product's Name</TableCell>
-                                <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Manufacturer</TableCell>
-                                <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Description</TableCell>
-                                <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Options</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {product.map((val, ind) => {
-                                return (
-                                    <TableRow key={ind}>
-                                        <TableCell className={classes.tablePadding} component="th" scope="row">
-                                            {val.name}
-                                        </TableCell>
-                                        <TableCell className={classes.tablePadding}>{val.manufacturer}</TableCell>
-                                        <TableCell className={classes.tablePadding}>{val.description}</TableCell>
-                                        <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>
-                                            <Button
-                                                variant='contained'
-                                                color='primary'
-                                                onClick={() => this.getRow(ind)}
-                                            >
-                                                Edit
+                <div className={classes.container}>
+                    <Paper className={classes.root}>
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Product's Name</TableCell>
+                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Manufacturer</TableCell>
+                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Description</TableCell>
+                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Options</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {product.map((val, ind) => {
+                                    return (
+                                        <TableRow key={ind}>
+                                            <TableCell className={classes.tablePadding} component="th" scope="row">
+                                                {val.name}
+                                            </TableCell>
+                                            <TableCell className={classes.tablePadding}>{val.manufacturer}</TableCell>
+                                            <TableCell className={classes.tablePadding}>{val.description}</TableCell>
+                                            <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>
+                                                <Button
+                                                    variant='contained'
+                                                    color='primary'
+                                                    size='small'
+                                                    onClick={() => this.getRow(ind)}
+                                                >
+                                                    Edit
                                             </Button>
-                                            <Button
-                                                style={{ marginLeft: 5 }}
-                                                variant='contained'
-                                                color='secondary'
-                                                onClick={() => this.onDelete(ind)}
-                                            >
-                                                Delete
+                                                <Button
+                                                    style={{ marginLeft: 5 }}
+                                                    variant='contained'
+                                                    color='secondary'
+                                                    size='small'
+                                                    onClick={() => this.onDelete(ind)}
+                                                >
+                                                    Delete
                                             </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </Paper>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </Paper>
+                </div>
             );
         }
     }
@@ -165,64 +169,66 @@ class Product extends Component {
         const { classes } = this.props;
         const { name, manufacturer, description, editing, open, message } = this.state;
         return (
-            <div className={classes.container}>
-                <div className={classes.widthParam}>
-                    <Paper className={classes.doPadding}>
-                        <Typography
-                            color='primary'
-                            variant='h5'
-                            gutterBottom={true}
-                            align='center'
-                            children="Product Book"
-                        />
-                        <div >
-                            <TextField
-                                margin='normal'
-                                fullWidth={true}
-                                placeholder='Please Enter'
-                                variant='outlined'
-                                label="Product's Name"
-                                type='text'
-                                name='name' value={name}
-                                onChange={this.handleChange} />
-                            <TextField
-                                margin='normal'
-                                fullWidth={true}
-                                placeholder='Please Enter'
-                                variant='outlined'
-                                label="Manufacturer's Name"
-                                type='text'
-                                name='manufacturer' value={manufacturer}
-                                onChange={this.handleChange} />
-                            <TextField
-                                margin='normal'
-                                fullWidth={true}
-                                placeholder='Please Enter'
-                                variant='outlined'
-                                label="Description"
-                                type='text'
-                                name='description' value={description}
-                                onChange={this.handleChange} />
-                            <div className={classes.doGapBetween}>
-                                <Button
-                                    style={{ width: 80 }}
-                                    onClick={this.onNew}
-                                    variant='contained'
-                                    color='primary'
-                                >
-                                    New
+            <div>
+                <div className={classes.container}>
+                    <div className={classes.widthParam}>
+                        <Paper className={classes.doPadding}>
+                            <Typography
+                                color='primary'
+                                variant='h5'
+                                gutterBottom={true}
+                                align='center'
+                                children="Product Book"
+                            />
+                            <div >
+                                <TextField
+                                    margin='normal'
+                                    fullWidth={true}
+                                    placeholder='Please Enter'
+                                    variant='outlined'
+                                    label="Product's Name"
+                                    type='text'
+                                    name='name' value={name}
+                                    onChange={this.handleChange} />
+                                <TextField
+                                    margin='normal'
+                                    fullWidth={true}
+                                    placeholder='Please Enter'
+                                    variant='outlined'
+                                    label="Manufacturer's Name"
+                                    type='text'
+                                    name='manufacturer' value={manufacturer}
+                                    onChange={this.handleChange} />
+                                <TextField
+                                    margin='normal'
+                                    fullWidth={true}
+                                    placeholder='Please Enter'
+                                    variant='outlined'
+                                    label="Description"
+                                    type='text'
+                                    name='description' value={description}
+                                    onChange={this.handleChange} />
+                                <div className={classes.doGapBetween}>
+                                    <Button
+                                        style={{ width: 80 }}
+                                        onClick={this.onNew}
+                                        variant='contained'
+                                        color='primary'
+                                    >
+                                        New
                                 </Button>
-                                <Button
-                                    style={{ width: 80 }}
-                                    onClick={this.onSave}
-                                    variant='contained'
-                                    color={editing ? 'inherit' : 'primary'}
-                                >
-                                    {editing ? 'Update' : 'Save'}
-                                </Button>
+                                    <Button
+                                        style={{ width: 80 }}
+                                        onClick={this.onSave}
+                                        variant='contained'
+                                        color={editing ? 'inherit' : 'primary'}
+                                    >
+                                        {editing ? 'Update' : 'Save'}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    </Paper>
+                        </Paper>
+                    </div>
                 </div>
                 <div>
                     {this.renderDataBlock()}
@@ -241,15 +247,13 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
     },
     doPadding: {
         padding: theme.spacing.unit * 2,
     },
     widthParam: {
-        width: 400,
+        width: 350,
     },
     doGapBetween: {
         marginTop: theme.spacing.unit,
@@ -259,11 +263,11 @@ const styles = theme => ({
         alignItems: 'center',
     },
     root: {
-        width: '100%',
+        width: 'fit-content',
         marginTop: theme.spacing.unit * 2,
     },
     table: {
-        minWidth: 700,
+        width: '100%',
     },
     tablePadding: {
         padding: 10,

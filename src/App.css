@@ -1,5 +1,5 @@
 .container {
   width: 90vw;
   margin: auto;
-  overflow: hidden;
+  overflow: auto;
 }
