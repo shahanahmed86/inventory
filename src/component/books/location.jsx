@@ -36,8 +36,8 @@ class Location extends Component {
     constructor() {
         super();
         this.state = {
-            name: 'Large Container',
-            address: 'Plot ABC at XYZ Area, near DEF, Karachi',
+            name: '',
+            address: '',
             editing: false,
             index: '',
             open: false,

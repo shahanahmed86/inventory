@@ -27,7 +27,7 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddSale: data => dispatch(allMethods.onAddSale(data)),
-        onEditSale: (row, index, oldQty) => dispatch(allMethods.onEditSale(row, index, oldQty)),
+        onEditSale: (row, index, oldQty, oldProductName, oldLocationName) => dispatch(allMethods.onEditSale(row, index, oldQty, oldProductName, oldLocationName)),
         onDeleteSale: (row, ind) => dispatch(allMethods.onDeleteSale(row, ind)),
     }
 }
@@ -43,9 +43,9 @@ class SaleBook extends Component {
         super();
         this.state = {
             date: `${year}-${month}-${date}`,
-            bill: '123',
-            vendee: 'Amir  Muhammad',
-            quantity: 45,
+            bill: '',
+            vendee: '',
+            quantity: 0,
             oldQty: 0,
             productName: '',
             locationName: '',
@@ -101,18 +101,49 @@ class SaleBook extends Component {
             const stockInHand = parseInt(product[ind][locationName]);
             if (stockInHand) {
                 if (editing) {
-                    if ((stockInHand + parseInt(this.state.oldQty)) < quantity) {
-                        this.setState({
-                            open: true,
-                            message: 'Sale Quantity is exceed from Stock in hand at the location',
-                        });
+                    if (productName === oldProductName) {
+                        if (locationName === oldLocationName) {
+                            if ((stockInHand + parseInt(oldQty)) < quantity) {
+                                this.setState({
+                                    open: true,
+                                    message: 'Sale Quantity is exceed from Stock in hand at the location',
+                                });
+                            }
+                            else {
+                                this.props.onEditSale({
+                                    date, bill, vendee, quantity, productName, locationName,
+                                }, index, oldQty, oldProductName, oldLocationName);
+                                this.onNew();
+                            }
+                        }
+                        else {
+                            if (stockInHand < quantity) {
+                                this.setState({
+                                    open: true,
+                                    message: 'Sale Quantity is exceed from Stock in hand at the location',
+                                });
+                            }
+                            else {
+                                this.props.onEditSale({
+                                    date, bill, vendee, quantity, productName, locationName,
+                                }, index, oldQty, oldProductName, oldLocationName);
+                                this.onNew();
+                            }
+                        }
                     }
                     else {
-                        const oldQty = parseInt(this.state.oldQty)
-                        this.props.onEditSale({
-                            date, bill, vendee, quantity, productName, locationName,
-                        }, index, oldQty);
-                        this.onNew();
+                        if (stockInHand < quantity) {
+                            this.setState({
+                                open: true,
+                                message: 'Sale Quantity is exceed from Stock in hand at the location',
+                            });
+                        }
+                        else {
+                            this.props.onEditSale({
+                                date, bill, vendee, quantity, productName, locationName,
+                            }, index, oldQty, oldProductName, oldLocationName);
+                            this.onNew();
+                        }
                     }
                 }
                 else {

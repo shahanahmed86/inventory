@@ -41,9 +41,9 @@ const allMethods = {
             dispatch({ type: types.ONADDPURCHASE, payload: data })
         }
     },
-    onEditPurchase: (row, ind, oldQty) => {
+    onEditPurchase: (row, ind, oldQty, oldProductName, oldLocationName) => {
         return dispatch => {
-            dispatch({ type: types.ONEDITPURCHASE, payload: { row, ind, oldQty } })
+            dispatch({ type: types.ONEDITPURCHASE, payload: { row, ind, oldQty, oldProductName, oldLocationName } })
         }
     },
     onDeletePurchase: (row, ind) => {
@@ -56,9 +56,9 @@ const allMethods = {
             dispatch({ type: types.ONADDSALE, payload: data })
         }
     },
-    onEditSale: (row, ind, oldQty) => {
+    onEditSale: (row, ind, oldQty, oldProductName, oldLocationName) => {
         return dispatch => {
-            dispatch({ type: types.ONEDITSALE, payload: { row, ind, oldQty } })
+            dispatch({ type: types.ONEDITSALE, payload: { row, ind, oldQty, oldProductName, oldLocationName } })
         }
     },
     onDeleteSale: (row, ind) => {

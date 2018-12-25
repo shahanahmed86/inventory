@@ -27,7 +27,7 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddPurchase: data => dispatch(allMethods.onAddPurchase(data)),
-        onEditPurchase: (row, index, oldQty) => dispatch(allMethods.onEditPurchase(row, index, oldQty)),
+        onEditPurchase: (row, index, oldQty, oldProductName, oldLocationName) => dispatch(allMethods.onEditPurchase(row, index, oldQty, oldProductName, oldLocationName)),
         onDeletePurchase: (row, ind) => dispatch(allMethods.onDeletePurchase(row, ind)),
     }
 }
@@ -43,9 +43,9 @@ class PurchaseBook extends Component {
         super();
         this.state = {
             date: `${year}-${month}-${date}`,
-            bill: '123',
-            vendor: 'Gul Muhammad',
-            quantity: 55,
+            bill: '',
+            vendor: '',
+            quantity: 0,
             oldQty: 0,
             productName: '',
             locationName: '',
@@ -77,8 +77,60 @@ class PurchaseBook extends Component {
         });
     }
 
+    getRow = index => {
+        const { date, bill, vendor, quantity, productName, locationName } = this.props.reducer.purchase[index];
+        this.setState({
+            date, bill, vendor, quantity, productName, locationName,
+            oldQty: quantity,
+            oldProductName: productName,
+            oldLocationName: locationName,
+            editing: true,
+            index,
+        });
+    }
+
+    getQty = () => {
+        const {
+            productName, locationName,
+            oldProductName, oldLocationName, oldQty,
+            editing
+        } = this.state;
+        const { product } = this.props.reducer;
+        if (!productName || !locationName) {
+            return 'Please select product & location fields to view qty';
+        }
+        else {
+            const ind = product.findIndex(val => val.name === productName);
+            const stockInHand = parseInt(product[ind][locationName]);
+            if (stockInHand) {
+                if (editing) {
+                    if (productName === oldProductName) {
+                        if (locationName === oldLocationName) {
+                            return `stock in hand is ${stockInHand - parseInt(oldQty)}`;
+                        }
+                        else {
+                            return `stock in hand is ${stockInHand}`;
+                        }
+                    }
+                    else {
+                        return `stock in hand is ${stockInHand}`;
+                    }
+                }
+                else {
+                    return `stock in hand is ${stockInHand}`;
+                }
+            }
+            else {
+                return 'This is the first time you are entering the purchase';
+            }
+        }
+    }
+
     onSave = () => {
-        const { date, bill, vendor, quantity, productName, locationName, index, editing } = this.state;
+        const {
+            date, bill, vendor, quantity, productName, locationName,
+            oldQty, oldProductName, oldLocationName,
+            index, editing } = this.state;
         const { product } = this.props.reducer;
         if (!productName) {
             this.setState({
@@ -96,18 +148,77 @@ class PurchaseBook extends Component {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
             if (editing) {
-                if ((stockInHand - parseInt(this.state.oldQty) + parseInt(quantity)) < 0) {
-                    this.setState({
-                        open: true,
-                        message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
-                    });
+                if (stockInHand) {
+                    if (productName === oldProductName) {
+                        if (locationName === oldLocationName) {
+                            if ((stockInHand - parseInt(oldQty) + parseInt(quantity)) < 0) {
+                                this.setState({
+                                    open: true,
+                                    message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                                });
+                            }
+                            else {
+                                this.props.onEditPurchase({
+                                    date, bill, vendor, quantity, productName, locationName,
+                                }, index, oldQty, oldProductName, oldLocationName);
+                                this.onNew();
+                            }
+                        }
+                        else {
+                            const oldInd = product.findIndex(val => val.name === oldProductName);
+                            const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
+                            if (oldStockInHand) {
+                                if ((oldStockInHand - parseInt(oldQty)) < 0) {
+                                    this.setState({
+                                        open: true,
+                                        message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                                    });
+                                }
+                                else {
+                                    this.props.onEditPurchase({
+                                        date, bill, vendor, quantity, productName, locationName,
+                                    }, index, oldQty, oldProductName, oldLocationName);
+                                    this.onNew();
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        const oldInd = product.findIndex(val => val.name === oldProductName);
+                        const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
+                        if (oldStockInHand) {
+                            if ((oldStockInHand - parseInt(oldQty)) < 0) {
+                                this.setState({
+                                    open: true,
+                                    message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                                });
+                            }
+                            else {
+                                this.props.onEditPurchase({
+                                    date, bill, vendor, quantity, productName, locationName,
+                                }, index, oldQty, oldProductName, oldLocationName);
+                                this.onNew();
+                            }
+                        }
+                    }
                 }
                 else {
-                    const oldQty = parseInt(this.state.oldQty);
-                    this.props.onEditPurchase({
-                        date, bill, vendor, quantity, productName, locationName,
-                    }, index, oldQty);
-                    this.onNew();
+                    const oldInd = product.findIndex(val => val.name === oldProductName);
+                    const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
+                    if (oldStockInHand) {
+                        if ((oldStockInHand - parseInt(oldQty)) < 0) {
+                            this.setState({
+                                open: true,
+                                message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                            });
+                        }
+                        else {
+                            this.props.onEditPurchase({
+                                date, bill, vendor, quantity, productName, locationName,
+                            }, index, oldQty, oldProductName, oldLocationName);
+                            this.onNew();
+                        }
+                    }
                 }
             }
             else {
@@ -119,46 +230,9 @@ class PurchaseBook extends Component {
         }
     }
 
-    getQty = () => {
-        const { productName, locationName, oldQty, editing } = this.state;
-        const { product } = this.props.reducer;
-        if (!productName || !locationName) {
-            return 'Please select product & location fields to view qty';
-        }
-        else {
-            const ind = product.findIndex(val => val.name === productName);
-            const stockInHand = parseInt(product[ind][locationName]);
-            if (editing) {
-                if (stockInHand) {
-                    return `stock in hand is ${stockInHand - parseInt(oldQty)}`;
-                }
-                else {
-                    return 'This is the first time you are entering the purchase'
-                }
-            }
-            else {
-                if (stockInHand) {
-                    return `stock in hand is ${stockInHand}`;
-                }
-                else {
-                    return 'This is the first time you are entering the purchase'
-                }
-            }
-        }
-    }
 
     onCancelEdit = () => {
         this.onNew();
-    }
-
-    getRow = index => {
-        const { date, bill, vendor, quantity, productName, locationName } = this.props.reducer.purchase[index];
-        this.setState({
-            date, bill, vendor, quantity, productName, locationName,
-            oldQty: quantity,
-            editing: true,
-            index,
-        });
     }
 
     onDelete = index => {

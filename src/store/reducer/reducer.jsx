@@ -2,22 +2,10 @@ import types from "../actions/types";
 
 const initialState = {
     profile: {},
-    product: [
-        {name: 'Prince',
-        manufacturer: 'Continental Biscuits Ltd',
-        description: 'Biscuits'},
-        {name: 'Tuc',
-        manufacturer: 'Continental Biscuits Ltd',
-        description: 'Biscuits'},
-    ],
+    product: [],
     purchase: [],
     sale: [],
-    location: [
-        {name: 'Large Container',
-        address: 'Plot ABC at XYZ Area, near DEF, Karachi'},
-        {name: 'Medium Container',
-        address: 'Plot ABC at XYZ Area, near DEF, Karachi'}
-    ],
+    location: [],
 }
 
 const reducer = (state = initialState, action) => {
@@ -79,9 +67,17 @@ const reducer = (state = initialState, action) => {
             }
         }
         case types.ONEDITPURCHASE: {
+            //reverse old product
+            const oldInd = state.product.findIndex(val => val.name === action.payload.oldProductName)
+            state.product[oldInd][action.payload.oldLocationName] -= parseInt(action.payload.oldQty);
+            //update new product
             const ind = state.product.findIndex(val => val.name === action.payload.row.productName);
-            state.product[ind][action.payload.row.locationName] += parseInt(action.payload.row.quantity);
-            state.product[ind][action.payload.row.locationName] -= parseInt(action.payload.oldQty);
+            if (state.product[ind][action.payload.row.locationName]) {
+                state.product[ind][action.payload.row.locationName] += parseInt(action.payload.row.quantity);
+            }
+            else {
+                state.product[ind][action.payload.row.locationName] = parseInt(action.payload.row.quantity);
+            }
             state.purchase.splice(action.payload.ind, 1, action.payload.row);
             return {
                 ...state,
@@ -104,8 +100,11 @@ const reducer = (state = initialState, action) => {
             }
         }
         case types.ONEDITSALE: {
+            //reverse old product
+            const oldInd = state.product.findIndex(val => val.name === action.payload.oldProductName)
+            state.product[oldInd][action.payload.oldLocationName] += parseInt(action.payload.oldQty);
+            //update new product
             const ind = state.product.findIndex(val => val.name === action.payload.row.productName);
-            state.product[ind][action.payload.row.locationName] += parseInt(action.payload.oldQty);
             state.product[ind][action.payload.row.locationName] -= parseInt(action.payload.row.quantity);
             state.sale.splice(action.payload.ind, 1, action.payload.row);
             return {

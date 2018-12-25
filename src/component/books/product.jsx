@@ -36,9 +36,9 @@ class Product extends Component {
         super();
 
         this.state = {
-            name: 'Prince Biscuits',
-            manufacturer: 'Continental Biscuits Ltd',
-            description: 'Biscuits',
+            name: '',
+            manufacturer: '',
+            description: '',
             open: false,
             message: '',
         }
