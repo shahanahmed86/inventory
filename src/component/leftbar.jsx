@@ -63,40 +63,34 @@ class NestedList extends Component {
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <List component='div' disablePadding>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.isProfile(true)}>
               <ListItemText
                 primary="1. Profile"
-                onClick={() => this.props.isProfile(true)}
               />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.isProduct(true)}>
               <ListItemText
                 primary="2. Product Book"
-                onClick={() => this.props.isProduct(true)}
               />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.isPurchase(true)}>
               <ListItemText
                 primary="3. Purchase Book"
-                onClick={() => this.props.isPurchase(true)}
               />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.isSale(true)}>
               <ListItemText
                 primary="4. Sale Book"
-                onClick={() => this.props.isSale(true)}
               />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.isLocation(true)}>
               <ListItemText
                 primary="5. Location"
-                onClick={() => this.props.isLocation(true)}
               />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.isInventory(true)}>
               <ListItemText
                 primary="6. Inventory Report"
-                onClick={() => this.props.isInventory(true)}
               />
             </ListItem>
           </List>
