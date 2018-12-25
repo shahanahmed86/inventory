@@ -144,6 +144,7 @@ class SaleBook extends Component {
         this.setState({
             date, bill, vendee, quantity, productName, locationName,
             oldQty: quantity,
+            oldProductName: productName,
             editing: true,
             index,
         });
@@ -155,6 +156,35 @@ class SaleBook extends Component {
             quantity, productName, locationName
         }, index);
         this.onNew();
+    }
+
+    handleCloseMessage = () => {
+        this.setState({
+            open: false,
+        });
+    }
+
+    getQty = () => {
+        const { productName, locationName, oldQty, editing } = this.state;
+        const { product } = this.props.reducer;
+        if (!productName || !locationName) {
+            return 'Please select product & location fields to view qty';
+        }
+        else {
+            const ind = product.findIndex(val => val.name === productName);
+            const stockInHand = parseInt(product[ind][locationName]);
+            if (editing) {
+                return `stock in hand is ${stockInHand + parseInt(oldQty)}`;
+            }
+            else {
+                if (stockInHand) {
+                    return `stock in hand is ${stockInHand}`;
+                }
+                else {
+                    return `Stock is unavailable`;
+                }
+            }
+        }
     }
 
     renderDataBlock = () => {
@@ -218,35 +248,6 @@ class SaleBook extends Component {
                     </Paper>
                 </div>
             );
-        }
-    }
-
-    handleCloseMessage = () => {
-        this.setState({
-            open: false,
-        });
-    }
-
-    getQty = () => {
-        const { productName, locationName, oldQty, editing } = this.state;
-        const { product } = this.props.reducer;
-        if (!productName || !locationName) {
-            return 'Please select product & location fields to view qty';
-        }
-        else {
-            const ind = product.findIndex(val => val.name === productName);
-            const stockInHand = parseInt(product[ind][locationName]);
-            if (editing) {
-                return `stock in hand is ${stockInHand + parseInt(oldQty)}`;
-            }
-            else {
-                if (stockInHand) {
-                    return `stock in hand is ${stockInHand}`;
-                }
-                else {
-                    return `Stock is unavailable`;
-                }
-            }
         }
     }
 
