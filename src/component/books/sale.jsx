@@ -95,34 +95,42 @@ class SaleBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (editing) {
-                if ((stockInHand + parseInt(this.state.oldQty)) < quantity) {
-                    this.setState({
-                        open: true,
-                        message: 'Sale Quantity is exceed from Stock in hand at the location',
-                    });
+            if (stockInHand) {
+                if (editing) {
+                    if ((stockInHand + parseInt(this.state.oldQty)) < quantity) {
+                        this.setState({
+                            open: true,
+                            message: 'Sale Quantity is exceed from Stock in hand at the location',
+                        });
+                    }
+                    else {
+                        const oldQty = parseInt(this.state.oldQty)
+                        this.props.onEditSale({
+                            date, bill, vendee, quantity, productName, locationName,
+                        }, index, oldQty);
+                        this.onNew();
+                    }
                 }
                 else {
-                    const oldQty = parseInt(this.state.oldQty)
-                    this.props.onEditSale({
-                        date, bill, vendee, quantity, productName, locationName,
-                    }, index, oldQty);
-                    this.onNew();
+                    if (stockInHand < quantity) {
+                        this.setState({
+                            open: true,
+                            message: 'Sale Quantity is exceed from Stock in hand at the location',
+                        });
+                    }
+                    else {
+                        this.props.onAddSale({
+                            date, bill, vendee, quantity, productName, locationName,
+                        })
+                        this.onNew();
+                    }
                 }
             }
             else {
-                if (stockInHand < quantity) {
-                    this.setState({
-                        open: true,
-                        message: 'Sale Quantity is exceed from Stock in hand at the location',
-                    });
-                }
-                else {
-                    this.props.onAddSale({
-                        date, bill, vendee, quantity, productName, locationName,
-                    })
-                    this.onNew();
-                }
+                this.setState({
+                    open: true,
+                    message: `Stock is unavailable at this time`,
+                })
             }
         }
     }
@@ -232,7 +240,12 @@ class SaleBook extends Component {
                 return `stock in hand is ${stockInHand + parseInt(oldQty)}`;
             }
             else {
-                return `stock in hand is ${stockInHand}`;
+                if (stockInHand) {
+                    return `stock in hand is ${stockInHand}`;
+                }
+                else {
+                    return `Stock is unavailable`;
+                }
             }
         }
     }
