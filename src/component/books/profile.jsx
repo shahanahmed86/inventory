@@ -67,7 +67,7 @@ class Profile extends Component {
 
     onUpdateHandler = () => {
         const { father, first, last, dob, position, gender } = this.state;
-        firebase.database().ref().child('profile').child(this.props.reducer.uid).set({
+        firebase.database().ref().child('profile').child(JSON.parse(localStorage.getItem('uid'))).set({
             father, first, last, dob, position, gender
         });
         this.setState({
