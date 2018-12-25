@@ -77,7 +77,6 @@ class Profile extends Component {
     }
 
     render() {
-        console.log(this.props.location);
         const {
             father, first, last, dob, gender,
             open, message

@@ -37,6 +37,20 @@ class Login extends Component {
         }
     }
 
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                const uid = user.uid;
+                localStorage.setItem('uid', JSON.stringify(uid));
+                this.props.history.replace('/dashboard');
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.setState({ isLoading: true })
+    }
+
     handleChange = ev => {
         const { name, value } = ev.target;
         this.setState({
@@ -68,7 +82,8 @@ class Login extends Component {
                         .then(resp => {
                             uid = resp.user.uid;
                             this.setState({ isLoading: true })
-                            this.props.history.replace('/dashboard', uid);
+                            localStorage.setItem('uid', JSON.stringify(uid));
+                            this.props.history.replace('/dashboard');
                         })
                         .catch(error => {
                             this.onError(true, error.message);
@@ -122,16 +137,18 @@ class Login extends Component {
             open, message
         } = this.state;
         const { classes } = this.props;
-        return isLoading ?
-            (
+        if (isLoading) {
+            return (
                 <div
                     className={classes.flexBox}
                     style={{ height: '100vh' }}
                 >
                     <CircularProgress />
                 </div>
-            )
-            : (
+            );
+        }
+        else {
+            return (
                 <div className={classes.container}>
                     <div className={classes.widthParam}>
                         <Paper className={classes.doPadding}>
@@ -284,6 +301,7 @@ class Login extends Component {
                     />
                 </div>
             );
+        }
     }
 }
 

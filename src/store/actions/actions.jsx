@@ -1,11 +1,6 @@
 import types from './types';
 
 const allMethods = {
-    getUID: val => {
-        return dispatch => {
-            dispatch({ type: types.GETUID, payload: val })
-        }
-    },
     getProfile: data => {
         return dispatch => {
             dispatch({ type: types.GETPROFILE, payload: data })

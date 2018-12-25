@@ -1,7 +1,6 @@
 import types from "../actions/types";
 
 const initialState = {
-    uid: '',
     profile: {},
     product: [
         {name: 'Prince',
@@ -23,12 +22,6 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case types.GETUID: {
-            return {
-                ...state,
-                uid: action.payload,
-            }
-        }
         case types.GETPROFILE: {
             return {
                 ...state,

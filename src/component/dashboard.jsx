@@ -39,7 +39,6 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        getUID: val => dispatch(allMethods.getUID(val)),
         getProfile: data => dispatch(allMethods.getProfile(data)),
     }
 }
@@ -48,37 +47,37 @@ const routes = [
     {
         path: '/dashboard',
         exact: true,
-        main: props => <Home {...props}/>
+        main: () => <Home/>
     },
     {
         path: '/dashboard/profile',
         exact: true,
-        main: props => <Profile {...props}/>
+        main: () => <Profile/>
     },
     {
         path: '/dashboard/product',
         exact: true,
-        main: props => <Product {...props}/>
+        main: () => <Product/>
     },
     {
         path: '/dashboard/purchase',
         exact: true,
-        main: props => <PurchaseBook {...props}/>
+        main: () => <PurchaseBook/>
     },
     {
         path: '/dashboard/sale',
         exact: true,
-        main: props => <SaleBook {...props}/>
+        main: () => <SaleBook/>
     },
     {
         path: '/dashboard/location',
         exact: true,
-        main: props => <Location {...props}/>
+        main: () => <Location/>
     },
     {
         path: '/dashboard/inventory',
         exact: true,
-        main: props => <Inventory {...props}/>
+        main: () => <Inventory/>
     }
 ]
 
@@ -87,16 +86,15 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            uid: props.location.state ? props.location.state : '',
+            uid: '',
             open: false,
             message: '',
         }
     }
 
     componentDidMount() {
-        const { uid } = this.state;
+        const uid = JSON.parse(localStorage.getItem('uid'));
         if (uid) {
-            this.props.getUID(uid);
             firebase.database().ref().child('profile').on('value', snapshot => {
                 const data = snapshot.val();
                 if (data) {
@@ -122,6 +120,7 @@ class Dashboard extends Component {
                 this.setState({
                     uid: '',
                 })
+                localStorage.removeItem('uid');
                 this.props.getProfile({});
                 this.props.history.replace('/');
             })
