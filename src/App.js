@@ -22,7 +22,7 @@ class App extends Component {
         <Router>
           <div>
             <Route exact path='/' component={Login} />
-            <Route exact path='/dashboard' component={Dashboard} />
+            <Route path='/dashboard' component={Dashboard} />
           </div>
         </Router>
       </Provider>

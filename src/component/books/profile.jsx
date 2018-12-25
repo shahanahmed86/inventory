@@ -26,7 +26,6 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        isProfile: result => dispatch(allMethods.isProfile(result)),
         getProfile: data => dispatch(allMethods.getProfile(data)),
     }
 }
@@ -71,10 +70,14 @@ class Profile extends Component {
         firebase.database().ref().child('profile').child(this.props.reducer.uid).set({
             father, first, last, dob, position, gender
         });
-        this.props.isProfile(false);
+        this.setState({
+            open: true,
+            message: "Updated Successfully",
+        });
     }
 
     render() {
+        console.log(this.props.location);
         const {
             father, first, last, dob, gender,
             open, message

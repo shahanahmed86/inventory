@@ -2,6 +2,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+//React-Router-Dom
+import { Link } from 'react-router-dom';
+
 //Material-ui
 import {
   withStyles,
@@ -13,30 +16,11 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 //Redux
 import { connect } from "react-redux";
-import allMethods from '../store/actions/actions';
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-});
 
 function mapStateToProps(store) {
   return {
     reducer: store,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    isProfile: result => dispatch(allMethods.isProfile(result)),
-    isProduct: result => dispatch(allMethods.isProduct(result)),
-    isPurchase: result => dispatch(allMethods.isPurchase(result)),
-    isSale: result => dispatch(allMethods.isSale(result)),
-    isLocation: result => dispatch(allMethods.isLocation(result)),
-    isInventory: result => dispatch(allMethods.isInventory(result)),
   }
 }
 
@@ -51,7 +35,6 @@ class NestedList extends Component {
 
   render() {
     const { classes } = this.props;
-
     return (
       <List
         component="nav"
@@ -63,36 +46,56 @@ class NestedList extends Component {
         </ListItem>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <List component='div' disablePadding>
-            <ListItem button onClick={() => this.props.isProfile(true)}>
-              <ListItemText
-                primary="1. Profile"
-              />
-            </ListItem>
-            <ListItem button onClick={() => this.props.isProduct(true)}>
-              <ListItemText
-                primary="2. Product Book"
-              />
-            </ListItem>
-            <ListItem button onClick={() => this.props.isPurchase(true)}>
-              <ListItemText
-                primary="3. Purchase Book"
-              />
-            </ListItem>
-            <ListItem button onClick={() => this.props.isSale(true)}>
-              <ListItemText
-                primary="4. Sale Book"
-              />
-            </ListItem>
-            <ListItem button onClick={() => this.props.isLocation(true)}>
-              <ListItemText
-                primary="5. Location"
-              />
-            </ListItem>
-            <ListItem button onClick={() => this.props.isInventory(true)}>
-              <ListItemText
-                primary="6. Inventory Report"
-              />
-            </ListItem>
+            <Link to='/dashboard'>
+              <ListItem button>
+                <ListItemText
+                  inset={true}
+                  primary="Dashboard"
+                />
+              </ListItem>
+            </Link>
+            <Link to='/dashboard/profile' className={classes.styleList}>
+              <ListItem button>
+                <ListItemText
+                  secondary="1. Profile"
+                />
+              </ListItem>
+            </Link>
+            <Link to='/dashboard/product' className={classes.styleList}>
+              <ListItem button>
+                <ListItemText
+                  secondary="2. Product Book"
+                />
+              </ListItem>
+            </Link>
+            <Link to='/dashboard/purchase' className={classes.styleList}>
+              <ListItem button>
+                <ListItemText
+                  secondary="3. Purchase Book"
+                />
+              </ListItem>
+            </Link>
+            <Link to='/dashboard/sale' className={classes.styleList}>
+              <ListItem button>
+                <ListItemText
+                  secondary="4. Sale Book"
+                />
+              </ListItem>
+            </Link>
+            <Link to='/dashboard/location' className={classes.styleList}>
+              <ListItem button>
+                <ListItemText
+                  secondary="5. Location"
+                />
+              </ListItem>
+            </Link>
+            <Link to='/dashboard/inventory' className={classes.styleList}>
+              <ListItem button>
+                <ListItemText
+                  secondary="6. Inventory Report"
+                />
+              </ListItem>
+            </Link>
           </List>
         </Collapse>
       </List>
@@ -100,8 +103,18 @@ class NestedList extends Component {
   }
 }
 
+const styles = theme => ({
+  root: {
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
+  styleList: {
+    textDecoration: 'none',
+  }
+});
+
 NestedList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NestedList));
+export default connect(mapStateToProps, null)(withStyles(styles)(NestedList));

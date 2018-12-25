@@ -11,36 +11,6 @@ const allMethods = {
             dispatch({ type: types.GETPROFILE, payload: data })
         }
     },
-    isProfile: result => {
-        return dispatch => {
-            dispatch({ type: types.ISPROFILE, payload: result })
-        }
-    },
-    isProduct: result => {
-        return dispatch => {
-            dispatch({ type: types.ISPRODUCT, payload: result })
-        }
-    },
-    isPurchase: result => {
-        return dispatch => {
-            dispatch({ type: types.ISPURCHASE, payload: result })
-        }
-    },
-    isSale: result => {
-        return dispatch => {
-            dispatch({ type: types.ISSALE, payload: result })
-        }
-    },
-    isLocation: result => {
-        return dispatch => {
-            dispatch({ type: types.ISLOCATION, payload: result })
-        }
-    },
-    isInventory: result => {
-        return dispatch => {
-            dispatch({ type: types.ISINVENTORY, payload: result })
-        }
-    },
     onAddProduct: data => {
         return dispatch => {
             dispatch({ type: types.ONADDPRODUCT, payload: data })

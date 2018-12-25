@@ -6,6 +6,9 @@ import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import allMethods from '../store/actions/actions'
 
+//React-Router-Dom
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 //Material-UI Component
 import {
     withStyles, CircularProgress, Paper, Typography,
@@ -20,6 +23,7 @@ import ButtonAppBar from '../containers/appbar'
 import NestedList from './leftbar';
 
 //Books
+import Home from "./books/home";
 import Profile from "./books/profile";
 import Product from "./books/product";
 import PurchaseBook from "./books/purchase";
@@ -39,6 +43,44 @@ function mapDispatchToProps(dispatch) {
         getProfile: data => dispatch(allMethods.getProfile(data)),
     }
 }
+
+const routes = [
+    {
+        path: '/dashboard',
+        exact: true,
+        main: props => <Home {...props}/>
+    },
+    {
+        path: '/dashboard/profile',
+        exact: true,
+        main: props => <Profile {...props}/>
+    },
+    {
+        path: '/dashboard/product',
+        exact: true,
+        main: props => <Product {...props}/>
+    },
+    {
+        path: '/dashboard/purchase',
+        exact: true,
+        main: props => <PurchaseBook {...props}/>
+    },
+    {
+        path: '/dashboard/sale',
+        exact: true,
+        main: props => <SaleBook {...props}/>
+    },
+    {
+        path: '/dashboard/location',
+        exact: true,
+        main: props => <Location {...props}/>
+    },
+    {
+        path: '/dashboard/inventory',
+        exact: true,
+        main: props => <Inventory {...props}/>
+    }
+]
 
 class Dashboard extends Component {
     constructor(props) {
@@ -91,73 +133,6 @@ class Dashboard extends Component {
             })
     }
 
-    flexBox2Render = () => {
-        const {
-            isProfile,
-            isProduct,
-            isPurchase,
-            isSale,
-            isLocation,
-            isInventory,
-        } = this.props.reducer;
-        if (isProfile) {
-            return (<Profile />);
-        }
-        else if (isProduct) {
-            return (
-                <div>
-                    <Product />
-                </div>
-            );
-        }
-        else if (isPurchase) {
-            return (
-                <div>
-                    <PurchaseBook />
-                </div>
-            );
-        }
-        else if (isSale) {
-            return (
-                <div>
-                    <SaleBook />
-                </div>
-            );
-        }
-        else if (isLocation) {
-            return (
-                <div>
-                    <Location />
-                </div>
-            );
-        }
-        else if (isInventory) {
-            return (
-                <div>
-                    <Inventory />
-                </div>
-            );
-        }
-        else {
-            return (
-                <div>
-                    <Typography
-                        color='primary'
-                        variant='h5'
-                        gutterBottom={true}
-                        align='center'
-                        children="Welcome to the Inventory System"
-                    />
-                    <img
-                        src={require('../images/inventory.jpg')}
-                        alt='Inventory System'
-                        height='350' width='350'
-                    />
-                </div>
-            );
-        }
-    }
-
     render() {
         const { classes, reducer } = this.props;
         const { isLoading, open, message } = this.state;
@@ -167,38 +142,49 @@ class Dashboard extends Component {
                     <CircularProgress />
                 </div>
             ) : (
-                <div className={classes.container}>
-                    <ButtonAppBar
-                        onSignOut={this.onSignOut}
-                    />
-                    <div className={classes.mainBox}>
-                        <div className={classes.flexBox1}>
-                            <Paper className={classes.doPadding}>
-                                <Typography
-                                    align='center'
-                                    variant='h5'
-                                    color='primary'
-                                    children='User'
-                                />
-                                <Typography
-                                    align='center'
-                                    variant='h6'
-                                    color='secondary'
-                                    children={`${reducer.profile.first} ${reducer.profile.last}`}
-                                />
-                                <NestedList />
-                            </Paper>
+                <Router>
+                    <div className={classes.container}>
+                        <ButtonAppBar
+                            onSignOut={this.onSignOut}
+                        />
+                        <div className={classes.mainBox}>
+                            <div className={classes.flexBox1}>
+                                <Paper className={classes.doPadding}>
+                                    <Typography
+                                        align='center'
+                                        variant='h5'
+                                        color='primary'
+                                        children='User'
+                                    />
+                                    <Typography
+                                        align='center'
+                                        variant='h6'
+                                        color='secondary'
+                                        children={`${reducer.profile.first} ${reducer.profile.last}`}
+                                    />
+                                    <NestedList />
+                                </Paper>
+                            </div>
+                            <div className={classes.flexBox2}>
+                                {routes.map((val, ind) => {
+                                    return (
+                                        <Route
+                                            key={ind}
+                                            path={val.path}
+                                            exact={val.exact}
+                                            component={val.main}
+                                        />
+                                    );
+                                })}
+                            </div>
                         </div>
-                        <div className={classes.flexBox2}>
-                            {this.flexBox2Render()}
-                        </div>
+                        <PositionedSnackbar
+                            open={open}
+                            message={message}
+                            close={this.handleCloseMessage}
+                        />
                     </div>
-                    <PositionedSnackbar
-                        open={open}
-                        message={message}
-                        close={this.handleCloseMessage}
-                    />
-                </div>
+                </Router>
             );
     }
 }

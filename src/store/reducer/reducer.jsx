@@ -19,12 +19,6 @@ const initialState = {
         {name: 'Medium Container',
         address: 'Plot ABC at XYZ Area, near DEF, Karachi'}
     ],
-    isProfile: false,
-    isProduct: false,
-    isPurchase: false,
-    isSale: false,
-    isLocation: false,
-    isInventory: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -39,72 +33,6 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 profile: action.payload,
-            }
-        }
-        case types.ISPROFILE: {
-            return {
-                ...state,
-                isProfile: action.payload,
-                isProduct: false,
-                isPurchase: false,
-                isSale: false,
-                isLocation: false,
-                isInventory: false,
-            }
-        }
-        case types.ISPRODUCT: {
-            return {
-                ...state,
-                isProfile: false,
-                isProduct: action.payload,
-                isPurchase: false,
-                isSale: false,
-                isLocation: false,
-                isInventory: false,
-            }
-        }
-        case types.ISPURCHASE: {
-            return {
-                ...state,
-                isProfile: false,
-                isProduct: false,
-                isPurchase: action.payload,
-                isSale: false,
-                isLocation: false,
-                isInventory: false,
-            }
-        }
-        case types.ISSALE: {
-            return {
-                ...state,
-                isProfile: false,
-                isProduct: false,
-                isPurchase: false,
-                isSale: action.payload,
-                isLocation: false,
-                isInventory: false,
-            }
-        }
-        case types.ISLOCATION: {
-            return {
-                ...state,
-                isProfile: false,
-                isProduct: false,
-                isPurchase: false,
-                isSale: false,
-                isLocation: action.payload,
-                isInventory: false,
-            }
-        }
-        case types.ISINVENTORY: {
-            return {
-                ...state,
-                isProfile: false,
-                isProduct: false,
-                isPurchase: false,
-                isSale: false,
-                isLocation: false,
-                isInventory: action.payload,
             }
         }
         case types.ONADDPRODUCT: {
