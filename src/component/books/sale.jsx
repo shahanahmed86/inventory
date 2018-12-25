@@ -145,9 +145,47 @@ class SaleBook extends Component {
             date, bill, vendee, quantity, productName, locationName,
             oldQty: quantity,
             oldProductName: productName,
+            oldLocationName: locationName,
             editing: true,
             index,
         });
+    }
+
+    getQty = () => {
+        const {
+            productName, locationName,
+            oldProductName, oldLocationName, oldQty,
+            editing
+        } = this.state;
+        const { product } = this.props.reducer;
+        if (!productName || !locationName) {
+            return 'Please select product & location fields to view qty';
+        }
+        else {
+            const ind = product.findIndex(val => val.name === productName);
+            const stockInHand = parseInt(product[ind][locationName]);
+            if (stockInHand) {
+                if (editing) {
+                    if (productName === oldProductName) {
+                        if (locationName === oldLocationName) {
+                            return `stock in hand is ${stockInHand + parseInt(oldQty)}`;
+                        }
+                        else {
+                            return `stock in hand is ${stockInHand}`;
+                        }
+                    }
+                    else {
+                        return `stock in hand is ${stockInHand}`;
+                    }
+                }
+                else {
+                    return `stock in hand is ${stockInHand}`;
+                }
+            }
+            else {
+                return `Stock is unavailable`;
+            }
+        }
     }
 
     onDelete = index => {
@@ -162,29 +200,6 @@ class SaleBook extends Component {
         this.setState({
             open: false,
         });
-    }
-
-    getQty = () => {
-        const { productName, locationName, oldQty, editing } = this.state;
-        const { product } = this.props.reducer;
-        if (!productName || !locationName) {
-            return 'Please select product & location fields to view qty';
-        }
-        else {
-            const ind = product.findIndex(val => val.name === productName);
-            const stockInHand = parseInt(product[ind][locationName]);
-            if (editing) {
-                return `stock in hand is ${stockInHand + parseInt(oldQty)}`;
-            }
-            else {
-                if (stockInHand) {
-                    return `stock in hand is ${stockInHand}`;
-                }
-                else {
-                    return `Stock is unavailable`;
-                }
-            }
-        }
     }
 
     renderDataBlock = () => {
