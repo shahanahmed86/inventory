@@ -3,11 +3,22 @@ import types from "../actions/types";
 const initialState = {
     uid: '',
     profile: {},
-    product: [],
+    product: [
+        {name: 'Prince',
+        manufacturer: 'Continental Biscuits Ltd',
+        description: 'Biscuits'},
+        {name: 'Tuc',
+        manufacturer: 'Continental Biscuits Ltd',
+        description: 'Biscuits'},
+    ],
     purchase: [],
     sale: [],
-    location: [],
-    inventory: [],
+    location: [
+        {name: 'Large Container',
+        address: 'Plot ABC at XYZ Area, near DEF, Karachi'},
+        {name: 'Medium Container',
+        address: 'Plot ABC at XYZ Area, near DEF, Karachi'}
+    ],
     isProfile: false,
     isProduct: false,
     isPurchase: false,

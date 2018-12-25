@@ -29,6 +29,7 @@ class Inventory extends Component {
         this.state = {
             open: false,
             message: '',
+            inventory: [],
         }
     }
 
@@ -38,10 +39,26 @@ class Inventory extends Component {
         });
     }
 
+    componentDidMount() {
+        const { location, product } = this.props.reducer;
+        const inventory = [];
+        for (var i = 0; i < product.length; i++) {
+            for (var j = 0; j < location.length; j++) {
+                if (product[i][location[j].name] > 0) {
+                    inventory.push({
+                        productName: product[i].name,
+                        locationName: location[j].name,
+                        quantity: product[i][location[j].name],
+                    });
+                }
+            }
+        }
+        this.setState({ inventory });
+    }
+
     render() {
         const { classes } = this.props;
-        const { open, message } = this.state;
-        const { location, product } = this.props.reducer;
+        const { open, message, inventory } = this.state;
         return (
             <div className={classes.container}>
                 <div className={classes.widthParam}>
@@ -78,29 +95,25 @@ class Inventory extends Component {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {product.map(product => {
+                                    {inventory.map((val, ind) => {
                                         return (
-                                            location.map((location, ind) => {
-                                                return (
-                                                    <TableRow key={ind}>
-                                                        <TableCell
-                                                            className={classes.tablePadding}
-                                                        >
-                                                            {product.name}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tablePadding}
-                                                        >
-                                                            {location.name}
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tablePadding}
-                                                        >
-                                                            {product[location.name]}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                );
-                                            })
+                                            <TableRow key={ind}>
+                                                <TableCell
+                                                    className={classes.tablePadding}
+                                                >
+                                                    {val.productName}
+                                                </TableCell>
+                                                <TableCell
+                                                    className={classes.tablePadding}
+                                                >
+                                                    {val.locationName}
+                                                </TableCell>
+                                                <TableCell
+                                                    className={classes.tablePadding}
+                                                >
+                                                    {val.quantity}
+                                                </TableCell>
+                                            </TableRow>
                                         );
                                     })}
                                 </TableBody>
