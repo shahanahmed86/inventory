@@ -68,24 +68,24 @@ class NestedList extends Component {
                 />
               </ListItem>
             </Link>
+            <Link to='/dashboard/location' className={classes.styleList}>
+              <ListItem button>
+                <ListItemText
+                  secondary="3. Location"
+                />
+              </ListItem>
+            </Link>
             <Link to='/dashboard/purchase' className={classes.styleList}>
               <ListItem button>
                 <ListItemText
-                  secondary="3. Purchase Book"
+                  secondary="4. Purchase Book"
                 />
               </ListItem>
             </Link>
             <Link to='/dashboard/sale' className={classes.styleList}>
               <ListItem button>
                 <ListItemText
-                  secondary="4. Sale Book"
-                />
-              </ListItem>
-            </Link>
-            <Link to='/dashboard/location' className={classes.styleList}>
-              <ListItem button>
-                <ListItemText
-                  secondary="5. Location"
+                  secondary="5. Sale Book"
                 />
               </ListItem>
             </Link>

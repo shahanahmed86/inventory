@@ -99,7 +99,7 @@ class SaleBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (stockInHand) {
+            if (stockInHand >= 0) {
                 if (editing) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
@@ -199,7 +199,7 @@ class SaleBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (stockInHand) {
+            if (stockInHand >= 0) {
                 if (editing) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
