@@ -47,37 +47,37 @@ const routes = [
     {
         path: '/dashboard',
         exact: true,
-        main: () => <Home/>
+        main: () => <Home />
     },
     {
         path: '/dashboard/profile',
         exact: true,
-        main: () => <Profile/>
+        main: () => <Profile />
     },
     {
         path: '/dashboard/product',
         exact: true,
-        main: () => <Product/>
+        main: () => <Product />
     },
     {
         path: '/dashboard/purchase',
         exact: true,
-        main: () => <PurchaseBook/>
+        main: () => <PurchaseBook />
     },
     {
         path: '/dashboard/sale',
         exact: true,
-        main: () => <SaleBook/>
+        main: () => <SaleBook />
     },
     {
         path: '/dashboard/location',
         exact: true,
-        main: () => <Location/>
+        main: () => <Location />
     },
     {
         path: '/dashboard/inventory',
         exact: true,
-        main: () => <Inventory/>
+        main: () => <Inventory />
     }
 ]
 
@@ -86,7 +86,6 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            uid: '',
             open: false,
             message: '',
         }
@@ -117,11 +116,6 @@ class Dashboard extends Component {
     onSignOut = () => {
         firebase.auth().signOut()
             .then(() => {
-                this.setState({
-                    uid: '',
-                })
-                localStorage.removeItem('uid');
-                this.props.getProfile({});
                 this.props.history.replace('/');
             })
             .catch(error => {
@@ -130,6 +124,11 @@ class Dashboard extends Component {
                     message: error.message,
                 })
             })
+    }
+
+    componentWillUnmount() {
+        localStorage.removeItem('uid');
+        this.props.getProfile({});
     }
 
     render() {

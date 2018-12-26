@@ -38,17 +38,17 @@ class Login extends Component {
     }
 
     componentDidMount() {
+        this.setState({ isLoading: true })
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 const uid = user.uid;
                 localStorage.setItem('uid', JSON.stringify(uid));
                 this.props.history.replace('/dashboard');
             }
+            else {
+                this.setState({ isLoading: false })
+            }
         });
-    }
-
-    componentWillUnmount() {
-        this.setState({ isLoading: true })
     }
 
     handleChange = ev => {
@@ -64,11 +64,12 @@ class Login extends Component {
         }));
     }
 
-    onError = (open, message) => {
-        this.setState({ open, message });
+    onError = (isLoading, open, message) => {
+        this.setState({ isLoading, open, message });
     }
 
     onLoginHandler = () => {
+        this.setState({ isLoading: true })
         let {
             isSignIn,
             email, password, confirmPassword,
@@ -86,7 +87,7 @@ class Login extends Component {
                             this.props.history.replace('/dashboard');
                         })
                         .catch(error => {
-                            this.onError(true, error.message);
+                            this.onError(false, true, error.message);
                         })
                 }
                 else {
@@ -97,29 +98,30 @@ class Login extends Component {
                                 firebase.database().ref().child('profile').child(uid).set({
                                     father, first, last, dob, position, gender, uid
                                 })
-                                father = first = last = dob = position = gender = '';
+                                email = password = confirmPassword = father = first = last = dob = position = gender = '';
                                 this.setState({
                                     isSignIn: true,
-                                    father, first, last, dob, position, gender,
+                                    email, password,
+                                    confirmPassword, father, first, last, dob, position, gender,
                                     open: true,
                                     message: 'Email ID made successfully...',
                                 });
                             })
                             .catch(error => {
-                                this.onError(true, error.message);
+                                this.onError(false, true, error.message);
                             })
                     }
                     else {
-                        this.onError(true, 'Confirm password must be equivalent to the password.');
+                        this.onError(false, true, 'Confirm password must be equivalent to the password.');
                     }
                 }
             }
             else {
-                this.onError(true, 'Password length must atleast be six (06) character long.');
+                this.onError(false, true, 'Password length must atleast be six (06) character long.');
             }
         }
         else {
-            this.onError(true, 'The Address must contain "@" & ".com" in email.');
+            this.onError(false, true, 'The Address must contain "@" & ".com" in email.');
         }
     }
 
@@ -275,7 +277,7 @@ class Login extends Component {
                                 color="primary"
                                 onClick={this.onLoginHandler}
                             >
-                                {isSignIn ? 'Sign In' : 'Sign Up'}
+                                {isSignIn ? 'Sign In' : 'Sign Up & Login'}
                             </Button>
                             <div className={classes.flexBox}>
                                 <Typography
