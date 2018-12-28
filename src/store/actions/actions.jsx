@@ -81,10 +81,11 @@ const allMethods = {
         const ind = state.product.findIndex(val => val.name === data.productName);
         const productKey = state.product[ind].key;
         const qty = state.product[ind][data.locationName];
-        if (qty > 0) {
+        if (qty >= 0) {
+            state.product[ind][data.locationName] += parseInt(data.quantity);
             ref.child('database').child('product').child(productKey).update({
-                [data.locationName]: parseInt(qty) + parseInt(data.quantity),
-            })
+                [data.locationName]: state.product[ind][data.locationName]
+            });
         }
         else {
             ref.child('database').child('product').child(productKey).update({
@@ -113,9 +114,10 @@ const allMethods = {
         const ind = state.product.findIndex(val => val.name === row.productName);
         const newKey = state.product[ind].key;
         const qty = state.product[ind][row.locationName];
-        if (qty) {
+        if (qty >= 0) {
+            state.product[ind][row.locationName] += parseInt(row.quantity);
             ref.child('database').child('product').child(newKey).update({
-                [row.locationName]: parseInt(qty) + parseInt(row.quantity),
+                [row.locationName]: state.product[ind][row.locationName]
             })
         }
         else {
@@ -132,9 +134,9 @@ const allMethods = {
         const state = store.getState();
         const ind = state.product.findIndex(val => val.name === row.productName);
         const productKey = state.product[ind].key;
-        const qty = state.product[ind][row.locationName];
+        state.product[ind][row.locationName] -= parseInt(row.quantity);
         ref.child('database').child('product').child(productKey).update({
-            [row.locationName]: parseInt(qty) - parseInt(row.quantity),
+            [row.locationName]: state.product[ind][row.locationName],
         });
         ref.child('database').child('purchase').child(row.key).remove();
         return dispatch => {
@@ -145,9 +147,9 @@ const allMethods = {
         const state = store.getState();
         const ind = state.product.findIndex(val => val.name === data.productName);
         const productKey = state.product[ind].key;
-        const qty = state.product[ind][data.locationName];
+        state.product[ind][data.locationName] -= parseInt(data.quantity);
         ref.child('database').child('product').child(productKey).update({
-            [data.locationName]: parseInt(qty) - parseInt(data.quantity),
+            [data.locationName]: state.product[ind][data.locationName],
         })
         const key = ref.child('database').child('sale').push().key;
         const { date, bill, vendee, quantity, productName, locationName } = data;
