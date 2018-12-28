@@ -104,7 +104,7 @@ class PurchaseBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (stockInHand >= 0) {
+            if (stockInHand >= 0 || stockInHand <= 0) {
                 if (editing) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
