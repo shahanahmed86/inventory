@@ -27,8 +27,8 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddPurchase: data => dispatch(allMethods.onAddPurchase(data)),
-        onEditPurchase: (row, index, oldQty, oldProductName, oldLocationName) => dispatch(allMethods.onEditPurchase(row, index, oldQty, oldProductName, oldLocationName)),
-        onDeletePurchase: (row, ind) => dispatch(allMethods.onDeletePurchase(row, ind)),
+        onEditPurchase: (row, oldQty, oldProductName, oldLocationName) => dispatch(allMethods.onEditPurchase(row, oldQty, oldProductName, oldLocationName)),
+        onDeletePurchase: row => dispatch(allMethods.onDeletePurchase(row)),
     }
 }
 
@@ -69,18 +69,20 @@ class PurchaseBook extends Component {
             bill: '',
             vendor: '',
             quantity: 0,
-            oldQty: 0,
             productName: '',
             locationName: '',
+            oldQty: 0,
+            oldProductName: '',
+            oldLocationName: '',
             editing: false,
             index: '',
         });
     }
 
     getRow = index => {
-        const { date, bill, vendor, quantity, productName, locationName } = this.props.reducer.purchase[index];
+        const { date, bill, vendor, quantity, productName, locationName, key } = this.props.reducer.purchase[index];
         this.setState({
-            date, bill, vendor, quantity, productName, locationName,
+            date, bill, vendor, quantity, productName, locationName, key,
             oldQty: quantity,
             oldProductName: productName,
             oldLocationName: locationName,
@@ -128,9 +130,9 @@ class PurchaseBook extends Component {
 
     onSave = () => {
         const {
-            date, bill, vendor, quantity, productName, locationName,
+            date, bill, vendor, quantity, productName, locationName, key,
             oldQty, oldProductName, oldLocationName,
-            index, editing } = this.state;
+            editing } = this.state;
         const { product } = this.props.reducer;
         if (!productName) {
             this.setState({
@@ -159,8 +161,8 @@ class PurchaseBook extends Component {
                             }
                             else {
                                 this.props.onEditPurchase({
-                                    date, bill, vendor, quantity, productName, locationName,
-                                }, index, oldQty, oldProductName, oldLocationName);
+                                    date, bill, vendor, quantity, productName, locationName, key,
+                                }, oldQty, oldProductName, oldLocationName);
                                 this.onNew();
                             }
                         }
@@ -176,8 +178,8 @@ class PurchaseBook extends Component {
                                 }
                                 else {
                                     this.props.onEditPurchase({
-                                        date, bill, vendor, quantity, productName, locationName,
-                                    }, index, oldQty, oldProductName, oldLocationName);
+                                        date, bill, vendor, quantity, productName, locationName, key,
+                                    }, oldQty, oldProductName, oldLocationName);
                                     this.onNew();
                                 }
                             }
@@ -195,8 +197,8 @@ class PurchaseBook extends Component {
                             }
                             else {
                                 this.props.onEditPurchase({
-                                    date, bill, vendor, quantity, productName, locationName,
-                                }, index, oldQty, oldProductName, oldLocationName);
+                                    date, bill, vendor, quantity, productName, locationName, key,
+                                }, oldQty, oldProductName, oldLocationName);
                                 this.onNew();
                             }
                         }
@@ -214,8 +216,8 @@ class PurchaseBook extends Component {
                         }
                         else {
                             this.props.onEditPurchase({
-                                date, bill, vendor, quantity, productName, locationName,
-                            }, index, oldQty, oldProductName, oldLocationName);
+                                date, bill, vendor, quantity, productName, locationName, key,
+                            }, oldQty, oldProductName, oldLocationName);
                             this.onNew();
                         }
                     }
@@ -236,7 +238,7 @@ class PurchaseBook extends Component {
     }
 
     onDelete = index => {
-        const { quantity, productName, locationName } = this.props.reducer.purchase[index];
+        const { quantity, productName, locationName, key } = this.props.reducer.purchase[index];
         const { product } = this.props.reducer;
         const ind = product.findIndex(val => val.name === productName);
         const stockInHand = parseInt(product[ind][locationName]);
@@ -248,8 +250,8 @@ class PurchaseBook extends Component {
         }
         else {
             this.props.onDeletePurchase({
-                quantity, productName, locationName
-            }, index);
+                quantity, productName, locationName, key
+            });
             this.onNew();
         }
     }

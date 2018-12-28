@@ -26,8 +26,8 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddLocation: data => dispatch(allMethods.onAddLocation(data)),
-        onEditLocation: (row, ind) => dispatch(allMethods.onEditLocation(row, ind)),
-        onDeleteLocation: ind => dispatch(allMethods.onDeleteLocation(ind)),
+        onEditLocation: row => dispatch(allMethods.onEditLocation(row)),
+        onDeleteLocation: key => dispatch(allMethods.onDeleteLocation(key)),
     }
 }
 
@@ -42,6 +42,7 @@ class Location extends Component {
             index: '',
             open: false,
             message: '',
+            key: '',
         }
     }
 
@@ -53,7 +54,7 @@ class Location extends Component {
     }
 
     onSave = () => {
-        const { name, address, editing, index } = this.state;
+        const { name, address, key, editing } = this.state;
         if (!name) {
             this.setState({
                 open: true,
@@ -68,7 +69,7 @@ class Location extends Component {
         }
         else {
             if (editing) {
-                this.props.onEditLocation({ name, address }, index);
+                this.props.onEditLocation({ name, address, key });
             }
             else {
                 this.props.onAddLocation({ name, address });
@@ -81,21 +82,23 @@ class Location extends Component {
         this.setState({
             name: '',
             address: '',
+            key: '',
             editing: false,
         })
     }
 
     getRow = index => {
-        const { name, address } = this.props.reducer.location[index];
+        const { name, address, key } = this.props.reducer.location[index];
         this.setState({
-            name, address,
+            name, address, key,
             editing: true,
             index,
         });
     }
-
+    
     onDelete = index => {
-        this.props.onDeleteLocation(index)
+        const { key } = this.props.reducer.location[index];
+        this.props.onDeleteLocation(key)
         this.onNew();
     }
 

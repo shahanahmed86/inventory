@@ -26,8 +26,8 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddProduct: data => dispatch(allMethods.onAddProduct(data)),
-        onEditProduct: (row, index) => dispatch(allMethods.onEditProduct(row, index)),
-        onDeleteProduct: index => dispatch(allMethods.onDeleteProduct(index)),
+        onEditProduct: row => dispatch(allMethods.onEditProduct(row)),
+        onDeleteProduct: key => dispatch(allMethods.onDeleteProduct(key)),
     }
 }
 
@@ -41,6 +41,7 @@ class Product extends Component {
             description: '',
             open: false,
             message: '',
+            key: '',
         }
     }
 
@@ -58,11 +59,15 @@ class Product extends Component {
             description: '',
             editing: false,
             index: '',
+            key: '',
         })
     }
 
     onSave = () => {
-        const { editing, index, name, manufacturer, description } = this.state;
+        const {
+            name, manufacturer, description,
+            editing, key
+        } = this.state;
         if (!name) {
             this.setState({
                 open: true,
@@ -77,30 +82,27 @@ class Product extends Component {
         }
         else {
             if (editing) {
-                this.props.onEditProduct({
-                    name, manufacturer, description,
-                }, index)
+                this.props.onEditProduct({ name, manufacturer, description, key });
             }
             else {
-                this.props.onAddProduct({
-                    name, manufacturer, description,
-                });
+                this.props.onAddProduct({ name, manufacturer, description });
             }
             this.onNew();
         }
     }
 
     getRow = index => {
-        const { name, manufacturer, description } = this.props.reducer.product[index];
+        const { name, manufacturer, description, key } = this.props.reducer.product[index];
         this.setState({
-            name, manufacturer, description,
+            name, manufacturer, description, key,
             editing: true,
             index,
         });
     }
 
     onDelete = index => {
-        this.props.onDeleteProduct(index)
+        const key = this.props.reducer.product[index].key;
+        this.props.onDeleteProduct(key)
         this.onNew();
     }
 

@@ -27,8 +27,8 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
     return {
         onAddSale: data => dispatch(allMethods.onAddSale(data)),
-        onEditSale: (row, index, oldQty, oldProductName, oldLocationName) => dispatch(allMethods.onEditSale(row, index, oldQty, oldProductName, oldLocationName)),
-        onDeleteSale: (row, ind) => dispatch(allMethods.onDeleteSale(row, ind)),
+        onEditSale: (row, oldQty, oldProductName, oldLocationName) => dispatch(allMethods.onEditSale(row, oldQty, oldProductName, oldLocationName)),
+        onDeleteSale: row => dispatch(allMethods.onDeleteSale(row)),
     }
 }
 
@@ -46,11 +46,14 @@ class SaleBook extends Component {
             bill: '',
             vendee: '',
             quantity: 0,
-            oldQty: 0,
             productName: '',
             locationName: '',
+            oldQty: 0,
+            oldProductName: '',
+            oldLocationName: '',
             editing: false,
             index: '',
+            key: '',
             open: false,
             message: '',
         }
@@ -69,19 +72,24 @@ class SaleBook extends Component {
             bill: '',
             vendee: '',
             quantity: 0,
-            oldQty: 0,
             productName: '',
             locationName: '',
+            oldQty: 0,
+            oldProductName: '',
+            oldLocationName: '',
             editing: false,
             index: '',
+            key: '',
+            open: false,
+            message: '',
         });
     }
 
     onSave = () => {
         const {
-            date, bill, vendee, quantity, productName, locationName,
+            date, bill, vendee, quantity, productName, locationName, key,
             oldQty, oldProductName, oldLocationName,
-            index, editing
+            editing
         } = this.state;
         const { product } = this.props.reducer;
         if (!productName) {
@@ -111,8 +119,8 @@ class SaleBook extends Component {
                             }
                             else {
                                 this.props.onEditSale({
-                                    date, bill, vendee, quantity, productName, locationName,
-                                }, index, oldQty, oldProductName, oldLocationName);
+                                    date, bill, vendee, quantity, productName, locationName, key
+                                }, oldQty, oldProductName, oldLocationName);
                                 this.onNew();
                             }
                         }
@@ -125,8 +133,8 @@ class SaleBook extends Component {
                             }
                             else {
                                 this.props.onEditSale({
-                                    date, bill, vendee, quantity, productName, locationName,
-                                }, index, oldQty, oldProductName, oldLocationName);
+                                    date, bill, vendee, quantity, productName, locationName, key
+                                }, oldQty, oldProductName, oldLocationName);
                                 this.onNew();
                             }
                         }
@@ -140,8 +148,8 @@ class SaleBook extends Component {
                         }
                         else {
                             this.props.onEditSale({
-                                date, bill, vendee, quantity, productName, locationName,
-                            }, index, oldQty, oldProductName, oldLocationName);
+                                date, bill, vendee, quantity, productName, locationName, key
+                            }, oldQty, oldProductName, oldLocationName);
                             this.onNew();
                         }
                     }
@@ -155,7 +163,7 @@ class SaleBook extends Component {
                     }
                     else {
                         this.props.onAddSale({
-                            date, bill, vendee, quantity, productName, locationName,
+                            date, bill, vendee, quantity, productName, locationName
                         })
                         this.onNew();
                     }
@@ -175,9 +183,9 @@ class SaleBook extends Component {
     }
 
     getRow = index => {
-        const { date, bill, vendee, quantity, productName, locationName } = this.props.reducer.sale[index];
+        const { date, bill, vendee, quantity, productName, locationName, key } = this.props.reducer.sale[index];
         this.setState({
-            date, bill, vendee, quantity, productName, locationName,
+            date, bill, vendee, quantity, productName, locationName, key,
             oldQty: quantity,
             oldProductName: productName,
             oldLocationName: locationName,
@@ -224,10 +232,10 @@ class SaleBook extends Component {
     }
 
     onDelete = index => {
-        const { quantity, productName, locationName } = this.props.reducer.sale[index];
+        const { quantity, productName, locationName, key } = this.props.reducer.sale[index];
         this.props.onDeleteSale({
-            quantity, productName, locationName
-        }, index);
+            quantity, productName, locationName, key
+        });
         this.onNew();
     }
 

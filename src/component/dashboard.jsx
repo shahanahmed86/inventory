@@ -39,7 +39,8 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        getProfile: data => dispatch(allMethods.getProfile(data)),
+        fetchData: data => dispatch(allMethods.fetchData(data)),
+        getClearState: () => dispatch(allMethods.getClearState()),
     }
 }
 
@@ -89,15 +90,15 @@ class Dashboard extends Component {
             open: false,
             message: '',
         }
+        this.ref = firebase.database().ref();
     }
 
     componentDidMount() {
         const uid = JSON.parse(localStorage.getItem('uid'));
         if (uid) {
-            firebase.database().ref().child('profile').on('value', snapshot => {
-                const data = snapshot.val();
-                if (data) {
-                    this.props.getProfile(data[uid]);
+            this.ref.on('value', snapshot => {
+                if (snapshot) {
+                    this.props.fetchData(snapshot);
                     this.setState({ isLoading: false })
                 }
             });
@@ -128,7 +129,7 @@ class Dashboard extends Component {
 
     componentWillUnmount() {
         localStorage.removeItem('uid');
-        this.props.getProfile({});
+        this.props.getClearState({});
     }
 
     render() {
