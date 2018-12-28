@@ -168,6 +168,7 @@ class Login extends Component {
                                 gutterBottom={true}
                             />
                             <TextField
+                                autoFocus
                                 margin='normal'
                                 fullWidth={true}
                                 placeholder='Please Enter'

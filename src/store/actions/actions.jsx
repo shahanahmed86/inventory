@@ -114,7 +114,7 @@ const allMethods = {
         const ind = state.product.findIndex(val => val.name === row.productName);
         const newKey = state.product[ind].key;
         const qty = state.product[ind][row.locationName];
-        if (qty >= 0) {
+        if (qty >= 0 || qty <= 0) {
             state.product[ind][row.locationName] += parseInt(row.quantity);
             ref.child('database').child('product').child(newKey).update({
                 [row.locationName]: state.product[ind][row.locationName]
