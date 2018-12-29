@@ -82,12 +82,24 @@ class Product extends Component {
         }
         else {
             if (editing) {
-                this.props.onEditProduct({ name, manufacturer, description, key });
+                const { purchase } = this.props.reducer;
+                for (var i = 0; i < purchase.length; i++) {
+                    if (purchase[i].productName !== name) {
+                        this.setState({
+                            open: true,
+                            message: 'Record found for this product you cannot change it',
+                        });
+                    }
+                    else {
+                        this.props.onEditProduct({ name, manufacturer, description, key });
+                        this.onNew();
+                    }
+                }
             }
             else {
                 this.props.onAddProduct({ name, manufacturer, description });
+                this.onNew();
             }
-            this.onNew();
         }
     }
 
@@ -213,19 +225,19 @@ class Product extends Component {
                                 <div className={classes.doGapBetween}>
                                     <Button
                                         style={{ width: 80 }}
-                                        onClick={this.onNew}
-                                        variant='contained'
-                                        color='primary'
-                                    >
-                                        New
-                                </Button>
-                                    <Button
-                                        style={{ width: 80 }}
                                         onClick={this.onSave}
                                         variant='contained'
                                         color={editing ? 'inherit' : 'primary'}
                                     >
                                         {editing ? 'Update' : 'Save'}
+                                    </Button>
+                                    <Button
+                                        style={{ width: 80 }}
+                                        onClick={this.onNew}
+                                        variant='contained'
+                                        color='inherit'
+                                    >
+                                        Clear
                                     </Button>
                                 </div>
                             </div>

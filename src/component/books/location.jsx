@@ -69,12 +69,24 @@ class Location extends Component {
         }
         else {
             if (editing) {
-                this.props.onEditLocation({ name, address, key });
+                const { purchase } = this.props.reducer;
+                for (var i = 0; i < purchase.length; i++) {
+                    if (purchase[i].locationName !== name) {
+                        this.setState({
+                            open: true,
+                            message: 'Record found for this location you cannot change it',
+                        });
+                    }
+                    else {
+                        this.props.onEditLocation({ name, address, key });
+                        this.onNew();
+                    }
+                }
             }
             else {
                 this.props.onAddLocation({ name, address });
+                this.onNew();
             }
-            this.onNew();
         }
     }
 
@@ -201,19 +213,19 @@ class Location extends Component {
                         <div className={classes.doGapBetween}>
                             <Button
                                 style={{ width: 80 }}
-                                onClick={this.onNew}
-                                variant='contained'
-                                color='primary'
-                            >
-                                New
-                                </Button>
-                            <Button
-                                style={{ width: 80 }}
                                 onClick={this.onSave}
                                 variant='contained'
                                 color={editing ? 'inherit' : 'primary'}
                             >
                                 {editing ? 'Update' : 'Save'}
+                            </Button>
+                            <Button
+                                style={{ width: 80 }}
+                                onClick={this.onNew}
+                                variant='contained'
+                                color='inherit'
+                            >
+                                Clear
                             </Button>
                         </div>
                     </Paper>

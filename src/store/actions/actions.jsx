@@ -36,7 +36,7 @@ const allMethods = {
             dispatch({ type: types.ONADDPRODUCT })
         }
     },
-    onEditProduct: (row, ind) => {
+    onEditProduct: row => {
         const { name, manufacturer, description, key } = row;
         ref.child('database').child('product').child(key).set({
             name, manufacturer, description, key

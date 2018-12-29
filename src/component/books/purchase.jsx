@@ -451,15 +451,6 @@ class PurchaseBook extends Component {
                             <div className={classes.doGapBetween}>
                                 <Button
                                     style={{ width: 80 }}
-                                    onClick={this.onNew}
-                                    variant='contained'
-                                    color='primary'
-                                    disabled={editing ? true : false}
-                                >
-                                    New
-                            </Button>
-                                <Button
-                                    style={{ width: 80 }}
                                     onClick={this.onSave}
                                     variant='contained'
                                     color={editing ? 'inherit' : 'primary'}
@@ -470,11 +461,10 @@ class PurchaseBook extends Component {
                                     style={{ width: 80 }}
                                     onClick={this.onCancelEdit}
                                     variant='contained'
-                                    color='primary'
-                                    disabled={editing ? false : true}
+                                    color='inherit'
                                 >
                                     Cancel
-                            </Button>
+                                </Button>
                             </div>
                         </Paper>
                     </div>
