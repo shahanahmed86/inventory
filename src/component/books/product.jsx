@@ -66,7 +66,7 @@ class Product extends Component {
     onSave = () => {
         const {
             name, manufacturer, description,
-            editing, key
+            editing, key, index
         } = this.state;
         if (!name) {
             this.setState({
@@ -82,18 +82,22 @@ class Product extends Component {
         }
         else {
             if (editing) {
-                const { purchase } = this.props.reducer;
+                const { purchase, product } = this.props.reducer;
+                let matchFound = false;
                 for (var i = 0; i < purchase.length; i++) {
-                    if (purchase[i].productName !== name) {
-                        this.setState({
-                            open: true,
-                            message: 'Record found for this product you cannot change it',
-                        });
+                    if (purchase[i].productName === product[index].name) {
+                        matchFound = true
                     }
-                    else {
-                        this.props.onEditProduct({ name, manufacturer, description, key });
-                        this.onNew();
-                    }
+                }
+                if (matchFound) {
+                    this.setState({
+                        open: true,
+                        message: 'Transaction found for this product you cannot edit it',
+                    });
+                }
+                else {
+                    this.props.onEditProduct({ name, manufacturer, description, key });
+                    this.onNew();
                 }
             }
             else {
@@ -114,8 +118,23 @@ class Product extends Component {
 
     onDelete = index => {
         const key = this.props.reducer.product[index].key;
-        this.props.onDeleteProduct(key)
-        this.onNew();
+        const { purchase, product } = this.props.reducer;
+        let matchFound = false;
+        for (var i = 0; i < purchase.length; i++) {
+            if (purchase[i].productName === product[index].name) {
+                matchFound = true
+            }
+        }
+        if (matchFound) {
+            this.setState({
+                open: true,
+                message: 'Transaction found for this product you cannot delete it',
+            });
+        }
+        else {
+            this.props.onDeleteProduct(key)
+            this.onNew();
+        }
     }
 
     renderDataBlock = () => {

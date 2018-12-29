@@ -463,7 +463,7 @@ class PurchaseBook extends Component {
                                     variant='contained'
                                     color='inherit'
                                 >
-                                    Cancel
+                                    Clear
                                 </Button>
                             </div>
                         </Paper>

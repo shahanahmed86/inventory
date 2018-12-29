@@ -54,7 +54,7 @@ class Location extends Component {
     }
 
     onSave = () => {
-        const { name, address, key, editing } = this.state;
+        const { name, address, key, index, editing } = this.state;
         if (!name) {
             this.setState({
                 open: true,
@@ -69,18 +69,22 @@ class Location extends Component {
         }
         else {
             if (editing) {
-                const { purchase } = this.props.reducer;
+                const { purchase, location } = this.props.reducer;
+                let matchFound = false;
                 for (var i = 0; i < purchase.length; i++) {
-                    if (purchase[i].locationName !== name) {
-                        this.setState({
-                            open: true,
-                            message: 'Record found for this location you cannot change it',
-                        });
+                    if (purchase[i].locationName === location[index].name) {
+                        matchFound = true
                     }
-                    else {
-                        this.props.onEditLocation({ name, address, key });
-                        this.onNew();
-                    }
+                }
+                if (matchFound) {
+                    this.setState({
+                        open: true,
+                        message: 'Transaction found for this location you cannot edit it',
+                    });
+                }
+                else {
+                    this.props.onEditLocation({ name, address, key });
+                    this.onNew();
                 }
             }
             else {
@@ -107,11 +111,26 @@ class Location extends Component {
             index,
         });
     }
-    
+
     onDelete = index => {
         const { key } = this.props.reducer.location[index];
-        this.props.onDeleteLocation(key)
-        this.onNew();
+        const { purchase, location } = this.props.reducer;
+        let matchFound = false;
+        for (var i = 0; i < purchase.length; i++) {
+            if (purchase[i].locationName === location[index].name) {
+                matchFound = true
+            }
+        }
+        if (matchFound) {
+            this.setState({
+                open: true,
+                message: 'Transaction found for this location you cannot delete it',
+            });
+        }
+        else {
+            this.props.onDeleteLocation(key);
+            this.onNew();
+        }
     }
 
     renderDataBlock = () => {
@@ -178,58 +197,58 @@ class Location extends Component {
         const { name, address, editing, open, message } = this.state;
         return (
             <div>
-            <div className={classes.container}>
-                <div className={classes.widthParam}>
-                    <Paper className={classes.doPadding}>
-                        <Typography
-                            color='primary'
-                            variant='h5'
-                            gutterBottom={true}
-                            align='center'
-                            children="Location"
-                        />
-                        <div>
-                            <TextField
-                                margin='normal'
-                                fullWidth={true}
-                                label="Name"
-                                placeholder='Please Enter'
-                                variant='outlined'
-                                type='text'
-                                name='name' value={name}
-                                onChange={this.handleChange}
+                <div className={classes.container}>
+                    <div className={classes.widthParam}>
+                        <Paper className={classes.doPadding}>
+                            <Typography
+                                color='primary'
+                                variant='h5'
+                                gutterBottom={true}
+                                align='center'
+                                children="Location"
                             />
-                            <TextField
-                                margin='normal'
-                                fullWidth={true}
-                                label="Address"
-                                placeholder='Please Enter'
-                                variant='outlined'
-                                type='text'
-                                name='address' value={address}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                        <div className={classes.doGapBetween}>
-                            <Button
-                                style={{ width: 80 }}
-                                onClick={this.onSave}
-                                variant='contained'
-                                color={editing ? 'inherit' : 'primary'}
-                            >
-                                {editing ? 'Update' : 'Save'}
+                            <div>
+                                <TextField
+                                    margin='normal'
+                                    fullWidth={true}
+                                    label="Name"
+                                    placeholder='Please Enter'
+                                    variant='outlined'
+                                    type='text'
+                                    name='name' value={name}
+                                    onChange={this.handleChange}
+                                />
+                                <TextField
+                                    margin='normal'
+                                    fullWidth={true}
+                                    label="Address"
+                                    placeholder='Please Enter'
+                                    variant='outlined'
+                                    type='text'
+                                    name='address' value={address}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className={classes.doGapBetween}>
+                                <Button
+                                    style={{ width: 80 }}
+                                    onClick={this.onSave}
+                                    variant='contained'
+                                    color={editing ? 'inherit' : 'primary'}
+                                >
+                                    {editing ? 'Update' : 'Save'}
+                                </Button>
+                                <Button
+                                    style={{ width: 80 }}
+                                    onClick={this.onNew}
+                                    variant='contained'
+                                    color='inherit'
+                                >
+                                    Clear
                             </Button>
-                            <Button
-                                style={{ width: 80 }}
-                                onClick={this.onNew}
-                                variant='contained'
-                                color='inherit'
-                            >
-                                Clear
-                            </Button>
-                        </div>
-                    </Paper>
-                </div>
+                            </div>
+                        </Paper>
+                    </div>
                 </div>
                 <div>
                     {this.renderDataBlock()}
