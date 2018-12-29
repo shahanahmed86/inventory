@@ -39,7 +39,7 @@ class Inventory extends Component {
         });
     }
 
-    componentDidMount() {
+    getData() {
         const { location, product } = this.props.reducer;
         const inventory = [];
         for (var i = 0; i < product.length; i++) {
@@ -54,6 +54,14 @@ class Inventory extends Component {
             }
         }
         this.setState({ inventory });
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    componentWillReceiveProps() {
+        this.getData();
     }
 
     render() {
