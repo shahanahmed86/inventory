@@ -103,18 +103,18 @@ const allMethods = {
     },
     onEditPurchase: (row, oldQty, oldProductName, oldLocationName) => {
         const state = store.getState();
-        //reverse old product
+        //fetching to reverse old product
         const oldInd = state.product.findIndex(val => val.name === oldProductName)
         const productKey = state.product[oldInd].key;
-        state.product[oldInd][oldLocationName] -= parseInt(oldQty);
-        ref.child('database').child('product').child(productKey).update({
-            [oldLocationName]: state.product[oldInd][oldLocationName],
-        })
-        //update new product
+        //fetching to update new product
         const ind = state.product.findIndex(val => val.name === row.productName);
         const newKey = state.product[ind].key;
         const qty = state.product[ind][row.locationName];
-        if (qty >= 0 || qty <= 0) {
+        if (qty >= 0) {
+            state.product[oldInd][oldLocationName] -= parseInt(oldQty);
+            ref.child('database').child('product').child(productKey).update({
+                [oldLocationName]: state.product[oldInd][oldLocationName],
+            })
             state.product[ind][row.locationName] += parseInt(row.quantity);
             ref.child('database').child('product').child(newKey).update({
                 [row.locationName]: state.product[ind][row.locationName]
