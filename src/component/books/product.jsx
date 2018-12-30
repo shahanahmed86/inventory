@@ -140,6 +140,7 @@ class Product extends Component {
     renderDataBlock = () => {
         const { product } = this.props.reducer;
         if (product.length > 0) {
+            const { editing } = this.state;
             const { classes } = this.props;
             return (
                 <div className={classes.container}>
@@ -167,6 +168,7 @@ class Product extends Component {
                                                     variant='contained'
                                                     color='primary'
                                                     size='small'
+                                                    disabled={editing ? true : false}
                                                     onClick={() => this.getRow(ind)}
                                                 >
                                                     Edit
@@ -176,6 +178,7 @@ class Product extends Component {
                                                     variant='contained'
                                                     color='secondary'
                                                     size='small'
+                                                    disabled={editing ? true : false}
                                                     onClick={() => this.onDelete(ind)}
                                                 >
                                                     Delete

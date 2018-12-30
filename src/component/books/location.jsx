@@ -136,6 +136,7 @@ class Location extends Component {
     renderDataBlock = () => {
         const { location } = this.props.reducer;
         if (location.length > 0) {
+            const { editing } = this.state;
             const { classes } = this.props;
             return (
                 <div className={classes.container}>
@@ -161,6 +162,7 @@ class Location extends Component {
                                                     variant='contained'
                                                     color='primary'
                                                     size='small'
+                                                    disabled={editing ? true : false}
                                                     onClick={() => this.getRow(ind)}
                                                 >
                                                     Edit
@@ -170,6 +172,7 @@ class Location extends Component {
                                                     variant='contained'
                                                     color='secondary'
                                                     size='small'
+                                                    disabled={editing ? true : false}
                                                     onClick={() => this.onDelete(ind)}
                                                 >
                                                     Delete
