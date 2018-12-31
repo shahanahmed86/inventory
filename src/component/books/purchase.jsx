@@ -32,17 +32,12 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-const today = new Date();
-const year = today.getFullYear();
-const date = today.getDate();
-const month = today.getMonth() + 1;
-
 class PurchaseBook extends Component {
 
     constructor() {
         super();
         this.state = {
-            date: `${year}-${month}-${date}`,
+            date: '',
             bill: '',
             vendor: '',
             quantity: 0,
@@ -65,7 +60,7 @@ class PurchaseBook extends Component {
 
     onNew = () => {
         this.setState({
-            date: `${year}-${month}-${date}`,
+            date: '',
             bill: '',
             vendor: '',
             quantity: 0,
