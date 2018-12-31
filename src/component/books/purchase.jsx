@@ -116,15 +116,15 @@ class PurchaseBook extends Component {
                             }
                         }
                         else {
-                            return `stock in hand is ${stockInHand}`;
+                            return `${productName} stock at ${locationName} is ${stockInHand}`;
                         }
                     }
                     else {
-                        return `stock in hand is ${stockInHand}`;
+                        return `${productName} stock at ${locationName} is ${stockInHand}`;
                     }
                 }
                 else {
-                    return `stock in hand is ${stockInHand}`;
+                    return `${productName} stock at ${locationName} is ${stockInHand}`;
                 }
             }
             else {
