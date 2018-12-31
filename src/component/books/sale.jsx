@@ -107,14 +107,14 @@ class SaleBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (stockInHand >= 0) {
+            if (stockInHand || stockInHand >= 0) {
                 if (editing) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
                             if ((stockInHand + parseInt(oldQty)) < quantity) {
                                 this.setState({
                                     open: true,
-                                    message: 'Sale Quantity is exceed from Stock in hand at the location',
+                                    message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand with this sale is ${stockInHand + parseInt(oldQty)}`,
                                 });
                             }
                             else {
@@ -128,7 +128,7 @@ class SaleBook extends Component {
                             if (stockInHand < quantity) {
                                 this.setState({
                                     open: true,
-                                    message: 'Sale Quantity is exceed from Stock in hand at the location',
+                                    message: `Sale Quantity (${quantity}) of ${productName} at ${oldLocationName} is exceed from Stock in hand with this sale is ${stockInHand}`,
                                 });
                             }
                             else {
@@ -143,7 +143,7 @@ class SaleBook extends Component {
                         if (stockInHand < quantity) {
                             this.setState({
                                 open: true,
-                                message: 'Sale Quantity is exceed from Stock in hand at the location',
+                                message: `Sale Quantity (${quantity}) of ${oldProductName} at ${oldLocationName} is exceed from Stock in hand with this sale is ${stockInHand}`,
                             });
                         }
                         else {
@@ -158,7 +158,7 @@ class SaleBook extends Component {
                     if (stockInHand < quantity) {
                         this.setState({
                             open: true,
-                            message: 'Sale Quantity is exceed from Stock in hand at the location',
+                            message: `Sale Quantity (${quantity}) of ${oldProductName} at ${oldLocationName} is exceed from Stock in hand with this sale is ${stockInHand}`,
                         });
                     }
                     else {
@@ -172,7 +172,7 @@ class SaleBook extends Component {
             else {
                 this.setState({
                     open: true,
-                    message: `Stock is unavailable at this time`,
+                    message: `Stock in ${productName} at ${locationName} is unavailable at this time`,
                 })
             }
         }
@@ -207,26 +207,31 @@ class SaleBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (stockInHand >= 0) {
+            if (stockInHand || stockInHand >= 0) {
                 if (editing) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
-                            return `stock in hand is ${stockInHand + parseInt(oldQty)}`;
+                            return `${productName} stock available at ${locationName} with this sale is ${stockInHand + parseInt(oldQty)}`;
                         }
                         else {
-                            return `stock in hand is ${stockInHand}`;
+                            if (stockInHand === 0) {
+                                return `${productName} stock is unavailable at ${locationName}`;
+                            }
+                            else {
+                                return `${productName} stock available at ${locationName} is ${stockInHand}`;
+                            }
                         }
                     }
                     else {
-                        return `stock in hand is ${stockInHand}`;
+                        return `${productName} stock available at ${locationName} is ${stockInHand}`;
                     }
                 }
                 else {
-                    return `stock in hand is ${stockInHand}`;
+                    return `${productName} stock available at ${locationName} is ${stockInHand}`;
                 }
             }
             else {
-                return `Stock is unavailable`;
+                return `${productName} stock is unavailable at ${locationName}`;
             }
         }
     }

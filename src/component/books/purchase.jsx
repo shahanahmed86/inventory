@@ -108,7 +108,12 @@ class PurchaseBook extends Component {
                 if (editing) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
-                            return `Sale recorded in ${productName} at ${locationName} is ${parseInt(oldQty) - stockInHand}`;
+                            if ((parseInt(oldQty) - stockInHand) === 0) {
+                                return `${productName} quantity before this purchase is ${parseInt(oldQty) - stockInHand}`;
+                            }
+                            else {
+                                return `Sale recorded in ${productName} at ${locationName} is ${parseInt(oldQty) - stockInHand}`;
+                            }
                         }
                         else {
                             return `stock in hand is ${stockInHand}`;
