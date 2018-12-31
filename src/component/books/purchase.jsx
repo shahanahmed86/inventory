@@ -104,11 +104,11 @@ class PurchaseBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (stockInHand >= 0 || stockInHand <= 0) {
+            if (stockInHand || stockInHand >= 0) {
                 if (editing) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
-                            return `stock in hand is ${stockInHand - parseInt(oldQty)}`;
+                            return `Sale recorded in ${productName} at ${locationName} is ${parseInt(oldQty) - stockInHand}`;
                         }
                         else {
                             return `stock in hand is ${stockInHand}`;
@@ -150,13 +150,13 @@ class PurchaseBook extends Component {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
             if (editing) {
-                if (stockInHand >= 0) {
+                if (stockInHand || stockInHand >= 0) {
                     if (productName === oldProductName) {
                         if (locationName === oldLocationName) {
                             if ((stockInHand - parseInt(oldQty) + parseInt(quantity)) < 0) {
                                 this.setState({
                                     open: true,
-                                    message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                                    message: `${productName} will be negative at ${locationName}. In order to change this purchase try to increase the purchase or delete sale`,
                                 });
                             }
                             else {
@@ -169,11 +169,11 @@ class PurchaseBook extends Component {
                         else {
                             const oldInd = product.findIndex(val => val.name === oldProductName);
                             const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
-                            if (oldStockInHand) {
+                            if (oldStockInHand || oldStockInHand >= 0) {
                                 if ((oldStockInHand - parseInt(oldQty)) < 0) {
                                     this.setState({
                                         open: true,
-                                        message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                                        message: `${productName} will be negative at ${oldLocationName}. In order to change this purchase try to increase the purchase or delete sale`,
                                     });
                                 }
                                 else {
@@ -188,11 +188,11 @@ class PurchaseBook extends Component {
                     else {
                         const oldInd = product.findIndex(val => val.name === oldProductName);
                         const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
-                        if (oldStockInHand) {
+                        if (oldStockInHand || oldStockInHand >= 0) {
                             if ((oldStockInHand - parseInt(oldQty)) < 0) {
                                 this.setState({
                                     open: true,
-                                    message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                                    message: `${oldProductName} will be negative at ${oldLocationName}. In order to change this purchase try to increase the purchase or delete sale`,
                                 });
                             }
                             else {
@@ -207,11 +207,11 @@ class PurchaseBook extends Component {
                 else {
                     const oldInd = product.findIndex(val => val.name === oldProductName);
                     const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
-                    if (oldStockInHand) {
+                    if (oldStockInHand || oldStockInHand >= 0) {
                         if ((oldStockInHand - parseInt(oldQty)) < 0) {
                             this.setState({
                                 open: true,
-                                message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                                message: `${oldProductName} will be negative at ${oldLocationName}. In order to change this purchase try to increase the purchase or delete sale`,
                             });
                         }
                         else {

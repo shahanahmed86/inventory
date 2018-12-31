@@ -110,11 +110,7 @@ const allMethods = {
         const ind = state.product.findIndex(val => val.name === row.productName);
         const newKey = state.product[ind].key;
         const qty = state.product[ind][row.locationName];
-        if (qty >= 0) {
-            state.product[oldInd][oldLocationName] -= parseInt(oldQty);
-            ref.child('database').child('product').child(productKey).update({
-                [oldLocationName]: state.product[oldInd][oldLocationName],
-            })
+        if (qty || qty >= 0) {
             state.product[ind][row.locationName] += parseInt(row.quantity);
             ref.child('database').child('product').child(newKey).update({
                 [row.locationName]: state.product[ind][row.locationName]
@@ -125,6 +121,10 @@ const allMethods = {
                 [row.locationName]: parseInt(row.quantity),
             })
         }
+        state.product[oldInd][oldLocationName] -= parseInt(oldQty);
+        ref.child('database').child('product').child(productKey).update({
+            [oldLocationName]: state.product[oldInd][oldLocationName],
+        })
         ref.child('database').child('purchase').child(row.key).update(row);
         return dispatch => {
             dispatch({ type: types.ONEDITPURCHASE })
