@@ -7,7 +7,6 @@ import {
     withStyles,
     Paper,
     Typography, TextField, Button,
-    Table, TableBody, TableCell, TableHead, TableRow,
     FormControl, InputLabel, Select, OutlinedInput,
 } from '@material-ui/core';
 
@@ -17,6 +16,7 @@ import allMethods from '../../store/actions/actions';
 
 //Custom Component
 import PositionedSnackbar from '../../containers/snackbar';
+import ScrollDialog from '../../containers/dialog';
 
 function mapStateToProps(store) {
     return {
@@ -163,6 +163,10 @@ class PurchaseBook extends Component {
                                 this.props.onEditPurchase({
                                     date, bill, vendor, quantity, productName, locationName, key,
                                 }, oldQty, oldProductName, oldLocationName);
+                                this.setState({
+                                    open: true,
+                                    message: 'Transaction updated successfully',
+                                })
                                 this.onNew();
                             }
                         }
@@ -180,6 +184,10 @@ class PurchaseBook extends Component {
                                     this.props.onEditPurchase({
                                         date, bill, vendor, quantity, productName, locationName, key,
                                     }, oldQty, oldProductName, oldLocationName);
+                                    this.setState({
+                                        open: true,
+                                        message: 'Transaction updated successfully',
+                                    })
                                     this.onNew();
                                 }
                             }
@@ -199,6 +207,10 @@ class PurchaseBook extends Component {
                                 this.props.onEditPurchase({
                                     date, bill, vendor, quantity, productName, locationName, key,
                                 }, oldQty, oldProductName, oldLocationName);
+                                this.setState({
+                                    open: true,
+                                    message: 'Transaction updated successfully',
+                                })
                                 this.onNew();
                             }
                         }
@@ -218,6 +230,10 @@ class PurchaseBook extends Component {
                             this.props.onEditPurchase({
                                 date, bill, vendor, quantity, productName, locationName, key,
                             }, oldQty, oldProductName, oldLocationName);
+                            this.setState({
+                                open: true,
+                                message: 'Transaction updated successfully',
+                            })
                             this.onNew();
                         }
                     }
@@ -227,11 +243,14 @@ class PurchaseBook extends Component {
                 this.props.onAddPurchase({
                     date, bill, vendor, quantity, productName, locationName,
                 })
+                this.setState({
+                    open: true,
+                    message: 'Transaction recorded successfully',
+                })
                 this.onNew();
             }
         }
     }
-
 
     onCancelEdit = () => {
         this.onNew();
@@ -245,81 +264,21 @@ class PurchaseBook extends Component {
         if ((stockInHand - parseInt(quantity)) < 0) {
             this.setState({
                 open: true,
-                message: 'Stock will be negative. In order to change this purchase try to increase the quantity or delete sale',
+                message: `${productName} will be negative at ${locationName}. In order to change this purchase try to increase the purchase or delete sale`,
             });
         }
         else {
             this.props.onDeletePurchase({
                 quantity, productName, locationName, key
             });
+            this.setState({
+                open: true,
+                message: 'Transaction deleted successfully',
+            })
             this.onNew();
         }
     }
-
-    renderDataBlock = () => {
-        const { purchase } = this.props.reducer;
-        const { editing } = this.state;
-        if (purchase.length > 0) {
-            const { classes } = this.props;
-            return (
-                <div className={classes.container}>
-                    <Paper className={classes.root}>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Date</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Bill No.</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Vendor's Name</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Quantity</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Product Name</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Location Name</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Options</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {purchase.map((val, ind) => {
-                                    return (
-                                        <TableRow key={ind}>
-                                            <TableCell className={classes.tablePadding} component="th" scope="row">
-                                                {val.date}
-                                            </TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.bill}</TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.vendor}</TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.quantity}</TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.productName}</TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.locationName}</TableCell>
-                                            <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>
-                                                <Button
-                                                    variant='contained'
-                                                    color='primary'
-                                                    size='small'
-                                                    onClick={() => this.getRow(ind)}
-                                                    disabled={editing ? true : false}
-                                                >
-                                                    Edit
-                                            </Button>
-                                                <Button
-                                                    style={{ marginLeft: 5 }}
-                                                    variant='contained'
-                                                    color='secondary'
-                                                    size='small'
-                                                    onClick={() => this.onDelete(ind)}
-                                                    disabled={editing ? true : false}
-                                                >
-                                                    Delete
-                                            </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </Paper>
-                </div>
-            );
-        }
-    }
-
+    
     handleCloseMessage = () => {
         this.setState({
             open: false,
@@ -332,6 +291,11 @@ class PurchaseBook extends Component {
         const { product, location } = this.props.reducer;
         return (
             <div>
+                <ScrollDialog
+                    getRow={this.getRow}
+                    onDelete={this.onDelete}
+                    book='purchase'
+                />
                 <div className={classes.container}>
                     <div className={classes.widthParam}>
                         <Paper className={classes.doPadding}>
@@ -469,9 +433,6 @@ class PurchaseBook extends Component {
                         </Paper>
                     </div>
                 </div>
-                <div>
-                    {this.renderDataBlock()}
-                </div>
                 <PositionedSnackbar
                     open={open}
                     message={message}
@@ -492,7 +453,7 @@ const styles = theme => ({
         padding: theme.spacing.unit * 2,
     },
     widthParam: {
-        width: 350,
+        width: 300,
     },
     doGapBetween: {
         marginTop: theme.spacing.unit,
@@ -500,16 +461,6 @@ const styles = theme => ({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-    },
-    root: {
-        width: 'fit-content',
-        marginTop: theme.spacing.unit * 2,
-    },
-    table: {
-        width: '100%',
-    },
-    tablePadding: {
-        padding: 10,
     },
 });
 

@@ -189,7 +189,7 @@ const styles = theme => ({
         padding: theme.spacing.unit * 2,
     },
     widthParam: {
-        width: 350,
+        width: 300,
     },
 });
 

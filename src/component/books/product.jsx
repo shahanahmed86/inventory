@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import {
     withStyles,
     Paper,
-    Table, TableBody, TableCell, TableHead, TableRow,
     Typography, TextField, Button,
 } from '@material-ui/core';
 
@@ -16,6 +15,7 @@ import allMethods from '../../store/actions/actions';
 
 //Custom Component
 import PositionedSnackbar from '../../containers/snackbar';
+import ScrollDialog from '../../containers/dialog'
 
 function mapStateToProps(store) {
     return {
@@ -97,11 +97,19 @@ class Product extends Component {
                 }
                 else {
                     this.props.onEditProduct({ name, manufacturer, description, key });
+                    this.setState({
+                        open: true,
+                        message: 'Transaction updated successfully',
+                    })
                     this.onNew();
                 }
             }
             else {
                 this.props.onAddProduct({ name, manufacturer, description });
+                this.setState({
+                    open: true,
+                    message: 'Recorded recorded successfully',
+                })
                 this.onNew();
             }
         }
@@ -133,65 +141,11 @@ class Product extends Component {
         }
         else {
             this.props.onDeleteProduct(key)
+            this.setState({
+                open: true,
+                message: 'Transaction deleted successfully',
+            })
             this.onNew();
-        }
-    }
-
-    renderDataBlock = () => {
-        const { product } = this.props.reducer;
-        if (product.length > 0) {
-            const { editing } = this.state;
-            const { classes } = this.props;
-            return (
-                <div className={classes.container}>
-                    <Paper className={classes.root}>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Product's Name</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Manufacturer</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Description</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Options</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {product.map((val, ind) => {
-                                    return (
-                                        <TableRow key={ind}>
-                                            <TableCell className={classes.tablePadding} component="th" scope="row">
-                                                {val.name}
-                                            </TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.manufacturer}</TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.description}</TableCell>
-                                            <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>
-                                                <Button
-                                                    variant='contained'
-                                                    color='primary'
-                                                    size='small'
-                                                    disabled={editing ? true : false}
-                                                    onClick={() => this.getRow(ind)}
-                                                >
-                                                    Edit
-                                            </Button>
-                                                <Button
-                                                    style={{ marginLeft: 5 }}
-                                                    variant='contained'
-                                                    color='secondary'
-                                                    size='small'
-                                                    disabled={editing ? true : false}
-                                                    onClick={() => this.onDelete(ind)}
-                                                >
-                                                    Delete
-                                            </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </Paper>
-                </div>
-            );
         }
     }
 
@@ -206,6 +160,11 @@ class Product extends Component {
         const { name, manufacturer, description, editing, open, message } = this.state;
         return (
             <div>
+                <ScrollDialog
+                    getRow={this.getRow}
+                    onDelete={this.onDelete}
+                    book='product'
+                />
                 <div className={classes.container}>
                     <div className={classes.widthParam}>
                         <Paper className={classes.doPadding}>
@@ -266,9 +225,6 @@ class Product extends Component {
                         </Paper>
                     </div>
                 </div>
-                <div>
-                    {this.renderDataBlock()}
-                </div>
                 <PositionedSnackbar
                     open={open}
                     message={message}
@@ -289,7 +245,7 @@ const styles = theme => ({
         padding: theme.spacing.unit * 2,
     },
     widthParam: {
-        width: 350,
+        width: 300,
     },
     doGapBetween: {
         marginTop: theme.spacing.unit,
@@ -297,16 +253,6 @@ const styles = theme => ({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-    },
-    root: {
-        width: 'fit-content',
-        marginTop: theme.spacing.unit * 2,
-    },
-    table: {
-        width: '100%',
-    },
-    tablePadding: {
-        padding: 10,
     },
 });
 

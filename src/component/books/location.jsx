@@ -7,7 +7,6 @@ import {
     withStyles,
     Paper,
     Typography, TextField, Button,
-    Table, TableBody, TableCell, TableHead, TableRow,
 } from '@material-ui/core';
 
 //Redux
@@ -16,6 +15,7 @@ import allMethods from '../../store/actions/actions';
 
 //Custom Component
 import PositionedSnackbar from '../../containers/snackbar';
+import ScrollDialog from '../../containers/dialog'
 
 function mapStateToProps(store) {
     return {
@@ -84,11 +84,19 @@ class Location extends Component {
                 }
                 else {
                     this.props.onEditLocation({ name, address, key });
+                    this.setState({
+                        open: true,
+                        message: 'Transaction updated successfully',
+                    })
                     this.onNew();
                 }
             }
             else {
                 this.props.onAddLocation({ name, address });
+                this.setState({
+                    open: true,
+                    message: 'Transaction recorded successfully',
+                })
                 this.onNew();
             }
         }
@@ -129,66 +137,14 @@ class Location extends Component {
         }
         else {
             this.props.onDeleteLocation(key);
+            this.setState({
+                open: true,
+                message: 'Transaction deleted successfully',
+            })
             this.onNew();
         }
     }
-
-    renderDataBlock = () => {
-        const { location } = this.props.reducer;
-        if (location.length > 0) {
-            const { editing } = this.state;
-            const { classes } = this.props;
-            return (
-                <div className={classes.container}>
-                    <Paper className={classes.root}>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>SITE Name</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Address</TableCell>
-                                    <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>Options</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {location.map((val, ind) => {
-                                    return (
-                                        <TableRow key={ind}>
-                                            <TableCell className={classes.tablePadding} component="th" scope="row">
-                                                {val.name}
-                                            </TableCell>
-                                            <TableCell className={classes.tablePadding}>{val.address}</TableCell>
-                                            <TableCell className={classes.tablePadding} style={{ textAlign: 'center' }}>
-                                                <Button
-                                                    variant='contained'
-                                                    color='primary'
-                                                    size='small'
-                                                    disabled={editing ? true : false}
-                                                    onClick={() => this.getRow(ind)}
-                                                >
-                                                    Edit
-                                            </Button>
-                                                <Button
-                                                    style={{ marginLeft: 5 }}
-                                                    variant='contained'
-                                                    color='secondary'
-                                                    size='small'
-                                                    disabled={editing ? true : false}
-                                                    onClick={() => this.onDelete(ind)}
-                                                >
-                                                    Delete
-                                            </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </Paper>
-                </div>
-            );
-        }
-    }
-
+    
     handleCloseMessage = () => {
         this.setState({
             open: false,
@@ -200,6 +156,11 @@ class Location extends Component {
         const { name, address, editing, open, message } = this.state;
         return (
             <div>
+                <ScrollDialog
+                    getRow={this.getRow}
+                    onDelete={this.onDelete}
+                    book='location'
+                />
                 <div className={classes.container}>
                     <div className={classes.widthParam}>
                         <Paper className={classes.doPadding}>
@@ -253,9 +214,6 @@ class Location extends Component {
                         </Paper>
                     </div>
                 </div>
-                <div>
-                    {this.renderDataBlock()}
-                </div>
                 <PositionedSnackbar
                     open={open}
                     message={message}
@@ -276,7 +234,7 @@ const styles = theme => ({
         padding: theme.spacing.unit * 2,
     },
     widthParam: {
-        width: 350,
+        maxWidth: 300,
     },
     doGapBetween: {
         marginTop: theme.spacing.unit,
@@ -284,16 +242,6 @@ const styles = theme => ({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-    },
-    root: {
-        width: 'fit-content',
-        marginTop: theme.spacing.unit * 2,
-    },
-    table: {
-        width: '100%',
-    },
-    tablePadding: {
-        padding: 10,
     },
 });
 

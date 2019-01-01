@@ -85,16 +85,19 @@ class Inventory extends Component {
                                         <TableRow>
                                             <TableCell
                                                 className={classes.tablePadding}
+                                                style={{ textAlign: 'center' }}
                                             >
                                                 Product
                                             </TableCell>
                                             <TableCell
                                                 className={classes.tablePadding}
+                                                style={{ textAlign: 'center' }}
                                             >
                                                 Location
                                             </TableCell>
                                             <TableCell
                                                 className={classes.tablePadding}
+                                                style={{ textAlign: 'center' }}
                                             >
                                                 Closing
                                             </TableCell>
@@ -116,6 +119,7 @@ class Inventory extends Component {
                                                     </TableCell>
                                                     <TableCell
                                                         className={classes.tablePadding}
+                                                        style={{ textAlign: 'center' }}
                                                     >
                                                         {val.quantity}
                                                     </TableCell>
@@ -137,7 +141,7 @@ class Inventory extends Component {
         }
         else {
             return (
-                <div className={classes.container} style={{height: '75vh'}}>
+                <div className={classes.container} style={{ height: '75vh' }}>
                     <Typography
                         color='secondary'
                         variant='h5'
@@ -169,7 +173,6 @@ const styles = theme => ({
     },
     tablePadding: {
         padding: 10,
-        textAlign: 'center',
     },
 });
 
