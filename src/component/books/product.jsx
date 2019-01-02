@@ -42,6 +42,7 @@ class Product extends Component {
             open: false,
             message: '',
             key: '',
+            dialogOpen: false,
         }
     }
 
@@ -155,12 +156,43 @@ class Product extends Component {
         });
     }
 
+    handleOpenSnackBar = () => {
+        const { product } = this.props.reducer;
+        if (product.length > 0) {
+            this.setState({
+                dialogOpen: true,
+            });
+        }
+        else {
+            this.setState({
+                open: true,
+                message: 'Product List not found',
+            })
+        }
+    }
+
+    handleCloseSnackBar = () => {
+        this.setState({
+            dialogOpen: false,
+        });
+    }
+
     render() {
         const { classes } = this.props;
-        const { name, manufacturer, description, editing, open, message } = this.state;
+        const { name, manufacturer, description, editing, open, message, dialogOpen } = this.state;
         return (
             <div>
+                <Button
+                    onClick={this.handleOpenSnackBar}
+                    style={{ marginBottom: 10 }}
+                    color='secondary'
+                    variant='contained'
+                >
+                    Product List
+                </Button>
                 <ScrollDialog
+                    open={dialogOpen}
+                    close={this.handleCloseSnackBar}
                     getRow={this.getRow}
                     onDelete={this.onDelete}
                     book='product'

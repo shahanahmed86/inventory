@@ -43,6 +43,7 @@ class Location extends Component {
             open: false,
             message: '',
             key: '',
+            dialogOpen: false,
         }
     }
 
@@ -151,12 +152,43 @@ class Location extends Component {
         });
     }
 
+    handleOpenSnackBar = () => {
+        const { location } = this.props.reducer;
+        if (location.length > 0) {
+            this.setState({
+                dialogOpen: true,
+            });
+        }
+        else {
+            this.setState({
+                open: true,
+                message: 'Location List not found',
+            })
+        }
+    }
+    
+    handleCloseSnackBar = () => {
+        this.setState({
+            dialogOpen: false,
+        });
+    }
+
     render() {
         const { classes } = this.props;
-        const { name, address, editing, open, message } = this.state;
+        const { name, address, editing, open, message, dialogOpen } = this.state;
         return (
             <div>
+                <Button
+                    onClick={this.handleOpenSnackBar}
+                    style={{ marginBottom: 10 }}
+                    color='secondary'
+                    variant='contained'
+                >
+                    Location List
+                </Button>
                 <ScrollDialog
+                    open={dialogOpen}
+                    close={this.handleCloseSnackBar}
                     getRow={this.getRow}
                     onDelete={this.onDelete}
                     book='location'

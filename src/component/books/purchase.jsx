@@ -48,6 +48,7 @@ class PurchaseBook extends Component {
             index: '',
             open: false,
             message: '',
+            dialogOpen: false,
         }
     }
 
@@ -107,7 +108,7 @@ class PurchaseBook extends Component {
                                 return `${productName} quantity before this purchase is ${parseInt(oldQty) - stockInHand}`;
                             }
                             else {
-                                return `Sale recorded in ${productName} at ${locationName} is ${parseInt(oldQty) - stockInHand}`;
+                                return `Sales already recorded in ${productName} at ${locationName} is ${parseInt(oldQty) - stockInHand}`;
                             }
                         }
                         else {
@@ -285,13 +286,50 @@ class PurchaseBook extends Component {
         });
     }
 
+    handleOpenSnackBar = () => {
+        this.setState({
+            dialogOpen: true,
+        });
+    }
+
+    handleOpenSnackBar = () => {
+        const { purchase } = this.props.reducer;
+        if (purchase.length > 0) {
+            this.setState({
+                dialogOpen: true,
+            });
+        }
+        else {
+            this.setState({
+                open: true,
+                message: 'Purchases not found',
+            })
+        }
+    }
+    
+    handleCloseSnackBar = () => {
+        this.setState({
+            dialogOpen: false,
+        });
+    }
+
     render() {
         const { classes } = this.props;
-        const { date, bill, vendor, productName, locationName, editing, quantity, open, message } = this.state;
+        const { date, bill, vendor, productName, locationName, editing, quantity, open, message, dialogOpen } = this.state;
         const { product, location } = this.props.reducer;
         return (
             <div>
+                <Button
+                    onClick={this.handleOpenSnackBar}
+                    style={{ marginBottom: 10 }}
+                    color='secondary'
+                    variant='contained'
+                >
+                    Purchase Details
+                </Button>
                 <ScrollDialog
+                    open={dialogOpen}
+                    close={this.handleCloseSnackBar}
                     getRow={this.getRow}
                     onDelete={this.onDelete}
                     book='purchase'

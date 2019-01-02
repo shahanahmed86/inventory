@@ -51,6 +51,7 @@ class SaleBook extends Component {
             key: '',
             open: false,
             message: '',
+            dialogOpen: false,
         }
     }
 
@@ -127,7 +128,7 @@ class SaleBook extends Component {
                             if (stockInHand < quantity) {
                                 this.setState({
                                     open: true,
-                                    message: `Sale Quantity (${quantity}) of ${productName} at ${oldLocationName} is exceed from Stock in hand with this sale is ${stockInHand}`,
+                                    message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand is ${stockInHand}`,
                                 });
                             }
                             else {
@@ -146,7 +147,7 @@ class SaleBook extends Component {
                         if (stockInHand < quantity) {
                             this.setState({
                                 open: true,
-                                message: `Sale Quantity (${quantity}) of ${oldProductName} at ${oldLocationName} is exceed from Stock in hand with this sale is ${stockInHand}`,
+                                message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand is ${stockInHand}`,
                             });
                         }
                         else {
@@ -165,7 +166,7 @@ class SaleBook extends Component {
                     if (stockInHand < quantity) {
                         this.setState({
                             open: true,
-                            message: `Sale Quantity (${quantity}) of ${oldProductName} at ${oldLocationName} is exceed from Stock in hand with this sale is ${stockInHand}`,
+                            message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand is ${stockInHand}`,
                         });
                     }
                     else {
@@ -265,13 +266,44 @@ class SaleBook extends Component {
         });
     }
 
+    handleOpenSnackBar = () => {
+        const { sale } = this.props.reducer;
+        if (sale.length > 0) {
+            this.setState({
+                dialogOpen: true,
+            });
+        }
+        else {
+            this.setState({
+                open: true,
+                message: 'Sales not found',
+            })
+        }
+    }
+    
+    handleCloseSnackBar = () => {
+        this.setState({
+            dialogOpen: false,
+        });
+    }
+
     render() {
         const { classes } = this.props;
-        const { date, bill, vendee, productName, locationName, editing, quantity, open, message } = this.state;
+        const { date, bill, vendee, productName, locationName, editing, quantity, open, message, dialogOpen } = this.state;
         const { product, location } = this.props.reducer;
         return (
             <div>
+                <Button
+                    onClick={this.handleOpenSnackBar}
+                    style={{ marginBottom: 10 }}
+                    color='secondary'
+                    variant='contained'
+                >
+                    Sales Details
+                </Button>
                 <ScrollDialog
+                    open={dialogOpen}
+                    close={this.handleCloseSnackBar}
                     getRow={this.getRow}
                     onDelete={this.onDelete}
                     book='sale'

@@ -19,11 +19,6 @@ const mapStateToProps = store => {
 }
 
 class ScrollDialog extends Component {
-    state = {
-        open: false,
-        scroll: 'paper',
-        book: '',
-    };
 
     getButtonText() {
         const { book } = this.props
@@ -46,18 +41,10 @@ class ScrollDialog extends Component {
         }
     }
 
-    handleClickOpen = scroll => () => {
-        this.setState({ open: true, scroll });
-    };
-
-    handleClose = () => {
-        this.setState({ open: false });
-    };
-
     getRow = ind => {
-        const { getRow } = this.props;
+        const { getRow, close } = this.props;
         getRow(ind);
-        this.handleClose();
+        close();
     }
 
     onDelete = ind => {
@@ -317,29 +304,21 @@ class ScrollDialog extends Component {
     }
 
     render() {
-        const { open, scroll } = this.state;
+        const { open, close } = this.props;
         return (
             <div>
-                <Button
-                    onClick={this.handleClickOpen('paper')}
-                    style={{ marginBottom: 10 }}
-                    color='secondary'
-                    variant='contained'
-                >
-                    {this.getButtonText()}
-                </Button>
                 <Dialog
                     maxWidth='lg'
                     open={open}
-                    onClose={this.handleClose}
-                    scroll={scroll}
-                    aria-labelledby="purchaseSummary"
+                    onClose={close}
+                    scroll='paper'
+                    aria-labelledby="detail"
                 >
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <DialogTitle id="purchaseSummary">{this.getButtonText()}</DialogTitle>
+                        <DialogTitle id="detail">{this.getButtonText()}</DialogTitle>
                         <DialogActions>
                             <Button
-                                onClick={this.handleClose}
+                                onClick={close}
                                 color="secondary"
                             >
                                 Close
