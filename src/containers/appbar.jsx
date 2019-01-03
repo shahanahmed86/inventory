@@ -20,7 +20,7 @@ function ButtonAppBar(props) {
     <div className={classes.root}>
       <AppBar
         position="sticky"
-        color='default'
+        color='primary'
       >
         <Toolbar>
           <Typography

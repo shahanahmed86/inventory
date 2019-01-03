@@ -144,6 +144,9 @@ class Location extends Component {
             })
             this.onNew();
         }
+        if (this.props.reducer.location.length === 1) {
+            this.setState({ dialogOpen: false });
+        }
     }
     
     handleCloseMessage = () => {

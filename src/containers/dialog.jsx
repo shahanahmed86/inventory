@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 //Material-ui
 import {
-    Button, Dialog, DialogActions,
+    Button,
+    Dialog, DialogActions,
     DialogContent, DialogTitle,
     withStyles,
     Paper, Table, TableHead, TableBody, TableRow, TableCell
@@ -85,7 +86,7 @@ class ScrollDialog extends Component {
                                                     onClick={() => this.getRow(ind)}
                                                 >
                                                     Edit
-                                            </Button>
+                                                </Button>
                                                 <Button
                                                     style={{ marginLeft: 5 }}
                                                     variant='contained'
@@ -94,7 +95,7 @@ class ScrollDialog extends Component {
                                                     onClick={() => this.onDelete(ind)}
                                                 >
                                                     Delete
-                                            </Button>
+                                                </Button>
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -138,7 +139,7 @@ class ScrollDialog extends Component {
                                                     onClick={() => this.getRow(ind)}
                                                 >
                                                     Edit
-                                            </Button>
+                                                </Button>
                                                 <Button
                                                     style={{ marginLeft: 5 }}
                                                     variant='contained'
@@ -147,7 +148,7 @@ class ScrollDialog extends Component {
                                                     onClick={() => this.onDelete(ind)}
                                                 >
                                                     Delete
-                                            </Button>
+                                                </Button>
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -199,7 +200,7 @@ class ScrollDialog extends Component {
                                                     onClick={() => this.getRow(ind)}
                                                 >
                                                     Edit
-                                            </Button>
+                                                </Button>
                                                 <Button
                                                     style={{ marginLeft: 5 }}
                                                     variant='contained'
@@ -208,7 +209,7 @@ class ScrollDialog extends Component {
                                                     onClick={() => this.onDelete(ind)}
                                                 >
                                                     Delete
-                                            </Button>
+                                                </Button>
                                             </TableCell>
                                         </TableRow>
                                     );

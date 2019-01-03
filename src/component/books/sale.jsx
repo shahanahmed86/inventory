@@ -76,8 +76,6 @@ class SaleBook extends Component {
             editing: false,
             index: '',
             key: '',
-            open: false,
-            message: '',
         });
     }
 
@@ -114,13 +112,13 @@ class SaleBook extends Component {
                                 });
                             }
                             else {
-                                this.props.onEditSale({
-                                    date, bill, vendee, quantity, productName, locationName, key
-                                }, oldQty, oldProductName, oldLocationName);
                                 this.setState({
                                     open: true,
                                     message: 'Transaction updated successfully',
                                 })
+                                this.props.onEditSale({
+                                    date, bill, vendee, quantity, productName, locationName, key
+                                }, oldQty, oldProductName, oldLocationName);
                                 this.onNew();
                             }
                         }
@@ -132,13 +130,13 @@ class SaleBook extends Component {
                                 });
                             }
                             else {
-                                this.props.onEditSale({
-                                    date, bill, vendee, quantity, productName, locationName, key
-                                }, oldQty, oldProductName, oldLocationName);
                                 this.setState({
                                     open: true,
                                     message: 'Transaction updated successfully',
                                 })
+                                this.props.onEditSale({
+                                    date, bill, vendee, quantity, productName, locationName, key
+                                }, oldQty, oldProductName, oldLocationName);
                                 this.onNew();
                             }
                         }
@@ -151,13 +149,13 @@ class SaleBook extends Component {
                             });
                         }
                         else {
-                            this.props.onEditSale({
-                                date, bill, vendee, quantity, productName, locationName, key
-                            }, oldQty, oldProductName, oldLocationName);
                             this.setState({
                                 open: true,
                                 message: 'Transaction updated successfully',
                             })
+                            this.props.onEditSale({
+                                date, bill, vendee, quantity, productName, locationName, key
+                            }, oldQty, oldProductName, oldLocationName);
                             this.onNew();
                         }
                     }
@@ -170,12 +168,12 @@ class SaleBook extends Component {
                         });
                     }
                     else {
-                        this.props.onAddSale({
-                            date, bill, vendee, quantity, productName, locationName
-                        })
                         this.setState({
                             open: true,
                             message: 'Transaction recorded successfully',
+                        })
+                        this.props.onAddSale({
+                            date, bill, vendee, quantity, productName, locationName
                         })
                         this.onNew();
                     }
@@ -250,13 +248,16 @@ class SaleBook extends Component {
 
     onDelete = index => {
         const { quantity, productName, locationName, key } = this.props.reducer.sale[index];
-        this.props.onDeleteSale({
-            quantity, productName, locationName, key
-        });
         this.setState({
             open: true,
             message: 'Transaction deleted successfully',
         })
+        this.props.onDeleteSale({
+            quantity, productName, locationName, key
+        });
+        if (this.props.reducer.sale.length === 1) {
+            this.setState({ dialogOpen: false });
+        }
         this.onNew();
     }
 
@@ -280,7 +281,7 @@ class SaleBook extends Component {
             })
         }
     }
-    
+
     handleCloseSnackBar = () => {
         this.setState({
             dialogOpen: false,

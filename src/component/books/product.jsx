@@ -109,7 +109,7 @@ class Product extends Component {
                 this.props.onAddProduct({ name, manufacturer, description });
                 this.setState({
                     open: true,
-                    message: 'Recorded recorded successfully',
+                    message: 'Transaction recorded successfully',
                 })
                 this.onNew();
             }
@@ -147,6 +147,9 @@ class Product extends Component {
                 message: 'Transaction deleted successfully',
             })
             this.onNew();
+        }
+        if (this.props.reducer.product.length === 1) {
+            this.setState({ dialogOpen: false });
         }
     }
 

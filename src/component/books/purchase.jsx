@@ -278,6 +278,9 @@ class PurchaseBook extends Component {
             })
             this.onNew();
         }
+        if (this.props.reducer.purchase.length === 1) {
+            this.setState({ dialogOpen: false });
+        }
     }
     
     handleCloseMessage = () => {
