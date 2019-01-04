@@ -101,25 +101,45 @@ class SaleBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (stockInHand || stockInHand >= 0) {
-                if (editing) {
-                    if (productName === oldProductName) {
-                        if (locationName === oldLocationName) {
-                            if ((stockInHand + parseInt(oldQty)) < quantity) {
-                                this.setState({
-                                    open: true,
-                                    message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand with this sale is ${stockInHand + parseInt(oldQty)}`,
-                                });
+            if (quantity) {
+                if (stockInHand || stockInHand >= 0) {
+                    if (editing) {
+                        if (productName === oldProductName) {
+                            if (locationName === oldLocationName) {
+                                if ((stockInHand + parseInt(oldQty)) < quantity) {
+                                    this.setState({
+                                        open: true,
+                                        message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand with this sale is ${stockInHand + parseInt(oldQty)}`,
+                                    });
+                                }
+                                else {
+                                    this.setState({
+                                        open: true,
+                                        message: 'Transaction updated successfully',
+                                    })
+                                    this.props.onEditSale({
+                                        date, bill, vendee, quantity, productName, locationName, key
+                                    }, oldQty, oldProductName, oldLocationName);
+                                    this.onNew();
+                                }
                             }
                             else {
-                                this.setState({
-                                    open: true,
-                                    message: 'Transaction updated successfully',
-                                })
-                                this.props.onEditSale({
-                                    date, bill, vendee, quantity, productName, locationName, key
-                                }, oldQty, oldProductName, oldLocationName);
-                                this.onNew();
+                                if (stockInHand < quantity) {
+                                    this.setState({
+                                        open: true,
+                                        message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand is ${stockInHand}`,
+                                    });
+                                }
+                                else {
+                                    this.setState({
+                                        open: true,
+                                        message: 'Transaction updated successfully',
+                                    })
+                                    this.props.onEditSale({
+                                        date, bill, vendee, quantity, productName, locationName, key
+                                    }, oldQty, oldProductName, oldLocationName);
+                                    this.onNew();
+                                }
                             }
                         }
                         else {
@@ -151,39 +171,27 @@ class SaleBook extends Component {
                         else {
                             this.setState({
                                 open: true,
-                                message: 'Transaction updated successfully',
+                                message: 'Transaction recorded successfully',
                             })
-                            this.props.onEditSale({
-                                date, bill, vendee, quantity, productName, locationName, key
-                            }, oldQty, oldProductName, oldLocationName);
+                            this.props.onAddSale({
+                                date, bill, vendee, quantity, productName, locationName
+                            })
                             this.onNew();
                         }
                     }
                 }
                 else {
-                    if (stockInHand < quantity) {
-                        this.setState({
-                            open: true,
-                            message: `Sale Quantity (${quantity}) of ${productName} at ${locationName} is exceed from Stock in hand is ${stockInHand}`,
-                        });
-                    }
-                    else {
-                        this.setState({
-                            open: true,
-                            message: 'Transaction recorded successfully',
-                        })
-                        this.props.onAddSale({
-                            date, bill, vendee, quantity, productName, locationName
-                        })
-                        this.onNew();
-                    }
+                    this.setState({
+                        open: true,
+                        message: `Stock in ${productName} at ${locationName} is unavailable at this time`,
+                    })
                 }
             }
             else {
                 this.setState({
                     open: true,
-                    message: `Stock in ${productName} at ${locationName} is unavailable at this time`,
-                })
+                    message: 'Sale quantity must be greater than zero (0)',
+                });
             }
         }
     }

@@ -150,25 +150,49 @@ class PurchaseBook extends Component {
         else {
             const ind = product.findIndex(val => val.name === productName);
             const stockInHand = parseInt(product[ind][locationName]);
-            if (editing) {
-                if (stockInHand || stockInHand >= 0) {
-                    if (productName === oldProductName) {
-                        if (locationName === oldLocationName) {
-                            if ((stockInHand - parseInt(oldQty) + parseInt(quantity)) < 0) {
-                                this.setState({
-                                    open: true,
-                                    message: `${productName} will be negative at ${locationName}. In order to change this purchase try to increase the purchase or delete sale`,
-                                });
+            if (quantity) {
+                if (editing) {
+                    if (stockInHand || stockInHand >= 0) {
+                        if (productName === oldProductName) {
+                            if (locationName === oldLocationName) {
+                                if ((stockInHand - parseInt(oldQty) + parseInt(quantity)) < 0) {
+                                    this.setState({
+                                        open: true,
+                                        message: `${productName} will be negative at ${locationName}. In order to change this purchase try to increase the purchase or delete sale`,
+                                    });
+                                }
+                                else {
+                                    this.props.onEditPurchase({
+                                        date, bill, vendor, quantity, productName, locationName, key,
+                                    }, oldQty, oldProductName, oldLocationName);
+                                    this.setState({
+                                        open: true,
+                                        message: 'Transaction updated successfully',
+                                    })
+                                    this.onNew();
+                                }
                             }
                             else {
-                                this.props.onEditPurchase({
-                                    date, bill, vendor, quantity, productName, locationName, key,
-                                }, oldQty, oldProductName, oldLocationName);
-                                this.setState({
-                                    open: true,
-                                    message: 'Transaction updated successfully',
-                                })
-                                this.onNew();
+                                const oldInd = product.findIndex(val => val.name === oldProductName);
+                                const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
+                                if (oldStockInHand || oldStockInHand >= 0) {
+                                    if ((oldStockInHand - parseInt(oldQty)) < 0) {
+                                        this.setState({
+                                            open: true,
+                                            message: `${productName} will be negative at ${oldLocationName}. In order to change this purchase try to increase the purchase or delete sale`,
+                                        });
+                                    }
+                                    else {
+                                        this.props.onEditPurchase({
+                                            date, bill, vendor, quantity, productName, locationName, key,
+                                        }, oldQty, oldProductName, oldLocationName);
+                                        this.setState({
+                                            open: true,
+                                            message: 'Transaction updated successfully',
+                                        })
+                                        this.onNew();
+                                    }
+                                }
                             }
                         }
                         else {
@@ -178,7 +202,7 @@ class PurchaseBook extends Component {
                                 if ((oldStockInHand - parseInt(oldQty)) < 0) {
                                     this.setState({
                                         open: true,
-                                        message: `${productName} will be negative at ${oldLocationName}. In order to change this purchase try to increase the purchase or delete sale`,
+                                        message: `${oldProductName} will be negative at ${oldLocationName}. In order to change this purchase try to increase the purchase or delete sale`,
                                     });
                                 }
                                 else {
@@ -218,37 +242,21 @@ class PurchaseBook extends Component {
                     }
                 }
                 else {
-                    const oldInd = product.findIndex(val => val.name === oldProductName);
-                    const oldStockInHand = parseInt(product[oldInd][oldLocationName]);
-                    if (oldStockInHand || oldStockInHand >= 0) {
-                        if ((oldStockInHand - parseInt(oldQty)) < 0) {
-                            this.setState({
-                                open: true,
-                                message: `${oldProductName} will be negative at ${oldLocationName}. In order to change this purchase try to increase the purchase or delete sale`,
-                            });
-                        }
-                        else {
-                            this.props.onEditPurchase({
-                                date, bill, vendor, quantity, productName, locationName, key,
-                            }, oldQty, oldProductName, oldLocationName);
-                            this.setState({
-                                open: true,
-                                message: 'Transaction updated successfully',
-                            })
-                            this.onNew();
-                        }
-                    }
+                    this.props.onAddPurchase({
+                        date, bill, vendor, quantity, productName, locationName,
+                    })
+                    this.setState({
+                        open: true,
+                        message: 'Transaction recorded successfully',
+                    })
+                    this.onNew();
                 }
             }
             else {
-                this.props.onAddPurchase({
-                    date, bill, vendor, quantity, productName, locationName,
-                })
                 this.setState({
                     open: true,
-                    message: 'Transaction recorded successfully',
-                })
-                this.onNew();
+                    message: 'Purchase quantity must be greater than zero (0)',
+                });
             }
         }
     }
